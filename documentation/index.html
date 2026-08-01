@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Documentation — White-Label Real Estate Platform</title>
+  <style>
+    :root {
+      --primary: #0284c7;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --bg: #f8fafc;
+      --code-bg: #0f172a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      line-height: 1.65;
+      background: var(--bg);
+    }
+    .layout { display: flex; min-height: 100vh; }
+    nav {
+      width: 260px;
+      background: #fff;
+      border-right: 1px solid var(--border);
+      padding: 1.5rem 1rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+    nav h1 { font-size: 1rem; color: var(--primary); margin-bottom: .25rem; }
+    nav p { font-size: .75rem; color: var(--muted); margin-bottom: 1.25rem; }
+    nav a {
+      display: block;
+      padding: .45rem .75rem;
+      font-size: .875rem;
+      color: var(--text);
+      text-decoration: none;
+      border-radius: .375rem;
+    }
+    nav a:hover { background: var(--bg); color: var(--primary); }
+    main {
+      flex: 1;
+      max-width: 860px;
+      padding: 2.5rem 2rem 4rem;
+      background: #fff;
+    }
+    h2 {
+      font-size: 1.5rem;
+      margin: 2.5rem 0 1rem;
+      padding-bottom: .5rem;
+      border-bottom: 2px solid var(--border);
+    }
+    h2:first-child { margin-top: 0; }
+    h3 { font-size: 1.1rem; margin: 1.5rem 0 .75rem; }
+    p, li { margin-bottom: .75rem; color: #334155; }
+    ul, ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+    code {
+      background: #f1f5f9;
+      padding: .15rem .4rem;
+      border-radius: .25rem;
+      font-size: .875em;
+      font-family: ui-monospace, monospace;
+    }
+    pre {
+      background: var(--code-bg);
+      color: #e2e8f0;
+      padding: 1rem 1.25rem;
+      border-radius: .5rem;
+      overflow-x: auto;
+      margin: 1rem 0 1.25rem;
+      font-size: .8125rem;
+      line-height: 1.6;
+    }
+    pre code { background: none; padding: 0; color: inherit; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0 1.5rem;
+      font-size: .875rem;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: .6rem .75rem;
+      text-align: left;
+    }
+    th { background: var(--bg); font-weight: 600; }
+    .badge {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1d4ed8;
+      font-size: .75rem;
+      font-weight: 600;
+      padding: .2rem .5rem;
+      border-radius: .25rem;
+    }
+    .note {
+      background: #eff6ff;
+      border-left: 4px solid var(--primary);
+      padding: 1rem 1.25rem;
+      margin: 1rem 0 1.5rem;
+      border-radius: 0 .375rem .375rem 0;
+      font-size: .9rem;
+    }
+    .warn {
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      padding: 1rem 1.25rem;
+      margin: 1rem 0 1.5rem;
+      border-radius: 0 .375rem .375rem 0;
+      font-size: .9rem;
+    }
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      nav { width: 100%; height: auto; position: static; }
+      main { padding: 1.5rem 1rem 3rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <nav>
+      <h1>Real Estate Platform</h1>
+      <p>v1.0.0 · Documentation</p>
+      <a href="#introduction">Introduction</a>
+      <a href="#requirements">Requirements</a>
+      <a href="#installation">Installation</a>
+      <a href="#environment">Environment variables</a>
+      <a href="#white-label">White-label setup</a>
+      <a href="#mongodb">MongoDB setup</a>
+      <a href="#demo-data">Demo data</a>
+      <a href="#admin">Admin panel</a>
+      <a href="#production">Production build</a>
+      <a href="#deployment">Deployment</a>
+      <a href="#structure">Folder structure</a>
+      <a href="#credits">Credits &amp; licenses</a>
+      <a href="#changelog">Changelog</a>
+      <a href="#support">Support</a>
+    </nav>
+
+    <main>
+      <h2 id="introduction">Introduction</h2>
+      <p>
+        Thank you for purchasing <strong>White-Label Real Estate Platform</strong>.
+        This is a full-stack property listing application built with
+        <span class="badge">Next.js 14</span>
+        <span class="badge">TypeScript</span>
+        <span class="badge">Tailwind CSS</span>
+        <span class="badge">MongoDB</span>
+        <span class="badge">NextAuth</span>.
+      </p>
+      <p>Key capabilities:</p>
+      <ul>
+        <li>Public property website with search, filters, and detail pages</li>
+        <li>White-label branding via environment variables (no code edits per client)</li>
+        <li>Admin panel for properties and user management</li>
+        <li>User dashboard for listing owners</li>
+        <li>Role-based access: Super Admin, Admin, User</li>
+        <li>SEO: sitemap, robots.txt, Open Graph metadata</li>
+        <li>Contact, Privacy, and Terms pages</li>
+      </ul>
+
+      <h2 id="requirements">Requirements</h2>
+      <ul>
+        <li><strong>Node.js</strong> 18 or later (<a href="https://nodejs.org">nodejs.org</a>)</li>
+        <li><strong>npm</strong> 9 or later (included with Node.js)</li>
+        <li><strong>MongoDB</strong> 6+ — local install or <a href="https://www.mongodb.com/atlas">MongoDB Atlas</a> (free tier works)</li>
+        <li>A code editor (VS Code recommended)</li>
+        <li>Terminal / command line access</li>
+      </ul>
+
+      <h2 id="installation">Installation</h2>
+      <h3>1. Extract the package</h3>
+      <p>Unzip the downloaded file to your preferred location.</p>
+
+      <h3>2. Install dependencies</h3>
+      <pre><code>cd real-estate-app
+npm install</code></pre>
+
+      <h3>3. Configure environment</h3>
+      <pre><code>cp .env.example .env.local</code></pre>
+      <p>Open <code>.env.local</code> and set at minimum:</p>
+      <pre><code>MONGODB_URI=mongodb://localhost:27017
+NEXTAUTH_SECRET=your-secret-at-least-32-characters-long
+NEXTAUTH_URL=http://localhost:3000
+NEXT_PUBLIC_SITE_URL=http://localhost:3000</code></pre>
+
+      <h3>4. Start development server</h3>
+      <pre><code>npm run dev</code></pre>
+      <p>Open <a href="http://localhost:3000">http://localhost:3000</a> in your browser.</p>
+
+      <div class="note">
+        If port 3000 is in use, Next.js will use the next available port. Update
+        <code>NEXTAUTH_URL</code> and <code>NEXT_PUBLIC_SITE_URL</code> to match the port shown in the terminal.
+      </div>
+
+      <h2 id="environment">Environment variables</h2>
+      <table>
+        <thead>
+          <tr><th>Variable</th><th>Required</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>MONGODB_URI</code></td><td>Yes</td><td>MongoDB connection string</td></tr>
+          <tr><td><code>MONGODB_DB_NAME</code></td><td>No</td><td>Database name (default: <code>realestate</code>)</td></tr>
+          <tr><td><code>NEXTAUTH_SECRET</code></td><td>Yes</td><td>Session signing secret (32+ chars in production)</td></tr>
+          <tr><td><code>NEXTAUTH_URL</code></td><td>Yes</td><td>Full app URL including protocol</td></tr>
+          <tr><td><code>JWT_SECRET</code></td><td>No</td><td>API token secret (defaults to NEXTAUTH_SECRET)</td></tr>
+          <tr><td><code>NEXT_PUBLIC_SITE_URL</code></td><td>Prod</td><td>Public URL for SEO, sitemap, share links</td></tr>
+          <tr><td><code>NEXT_PUBLIC_COMPANY_NAME</code></td><td>No</td><td>Company / agency name</td></tr>
+          <tr><td><code>NEXT_PUBLIC_COMPANY_LOGO</code></td><td>No</td><td>Logo path (<code>/logo.png</code>) or full URL</td></tr>
+          <tr><td><code>NEXT_PUBLIC_PRIMARY_COLOR</code></td><td>No</td><td>Brand color hex (e.g. <code>#0284c7</code>)</td></tr>
+          <tr><td><code>NEXT_PUBLIC_COMPANY_TAGLINE</code></td><td>No</td><td>Footer and meta description</td></tr>
+          <tr><td><code>NEXT_PUBLIC_HERO_HEADLINE</code></td><td>No</td><td>Homepage hero title</td></tr>
+          <tr><td><code>NEXT_PUBLIC_HERO_SUBHEADLINE</code></td><td>No</td><td>Homepage hero subtitle</td></tr>
+          <tr><td><code>NEXT_PUBLIC_CONTACT_PHONE</code></td><td>No</td><td>Contact phone number</td></tr>
+          <tr><td><code>NEXT_PUBLIC_CONTACT_EMAIL</code></td><td>No</td><td>Contact email</td></tr>
+          <tr><td><code>NEXT_PUBLIC_COMPANY_ADDRESS</code></td><td>No</td><td>Office address</td></tr>
+          <tr><td><code>NEXT_PUBLIC_SOCIAL_*</code></td><td>No</td><td>Social profile URLs (Facebook, Instagram, etc.)</td></tr>
+          <tr><td><code>SEED_DEMO_DATA</code></td><td>No</td><td>Set to <code>true</code> for dev demo seed only</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="white-label">White-label setup</h2>
+      <p>Rebrand the entire site for each client by editing <code>.env.local</code> only — no code changes required.</p>
+
+      <h3>Example: new client deployment</h3>
+      <pre><code>NEXT_PUBLIC_COMPANY_NAME=Sunrise Properties
+NEXT_PUBLIC_PRIMARY_COLOR=#b45309
+NEXT_PUBLIC_COMPANY_LOGO=/logo.png
+NEXT_PUBLIC_COMPANY_TAGLINE=Luxury homes and commercial spaces across Maharashtra.
+NEXT_PUBLIC_HERO_HEADLINE=Discover exceptional properties
+NEXT_PUBLIC_HERO_SUBHEADLINE=Residential and commercial listings curated by our expert team.
+NEXT_PUBLIC_CONTACT_PHONE=+91 98765 43210
+NEXT_PUBLIC_CONTACT_EMAIL=hello@sunriseproperties.com
+NEXT_PUBLIC_COMPANY_ADDRESS=45 Marine Drive, Mumbai 400002
+NEXT_PUBLIC_SOCIAL_WHATSAPP=https://wa.me/919876543210</code></pre>
+
+      <h3>Adding a logo</h3>
+      <ol>
+        <li>Place your logo file in the <code>public/</code> folder (create it if missing), e.g. <code>public/logo.png</code></li>
+        <li>Set <code>NEXT_PUBLIC_COMPANY_LOGO=/logo.png</code></li>
+        <li>Restart the dev server or redeploy</li>
+      </ol>
+
+      <div class="note">
+        If no logo is set, the company name is displayed as styled text in the header and footer.
+      </div>
+
+      <h2 id="mongodb">MongoDB setup</h2>
+      <h3>Option A — Local MongoDB</h3>
+      <pre><code># macOS (Homebrew)
+brew install mongodb-community
+brew services start mongodb-community
+
+# .env.local
+MONGODB_URI=mongodb://localhost:27017</code></pre>
+
+      <h3>Option B — MongoDB Atlas (cloud)</h3>
+      <ol>
+        <li>Create a free cluster at <a href="https://www.mongodb.com/atlas">mongodb.com/atlas</a></li>
+        <li>Create a database user and allow your IP (or <code>0.0.0.0/0</code> for cloud deploys)</li>
+        <li>Copy the connection string and set it in <code>.env.local</code>:</li>
+      </ol>
+      <pre><code>MONGODB_URI=mongodb+srv://user:password@cluster.mongodb.net/realestate</code></pre>
+
+      <p>The database and collections are created automatically on first run.</p>
+
+      <h2 id="demo-data">Demo data &amp; accounts</h2>
+      <p>To populate sample properties and users on first run (development only):</p>
+      <pre><code>SEED_DEMO_DATA=true</code></pre>
+
+      <div class="warn">
+        <strong>Never enable <code>SEED_DEMO_DATA</code> in production.</strong> Demo seed is blocked when <code>NODE_ENV=production</code> unless explicitly set.
+      </div>
+
+      <p>Development demo accounts (shown on login page in dev mode only):</p>
+      <table>
+        <thead><tr><th>Role</th><th>Email</th><th>Password</th></tr></thead>
+        <tbody>
+          <tr><td>Super Admin</td><td>superadmin@estatehub.com</td><td>superadmin123</td></tr>
+          <tr><td>Admin</td><td>admin@estatehub.com</td><td>admin123</td></tr>
+          <tr><td>User</td><td>user@estatehub.com</td><td>user123</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="admin">Admin panel</h2>
+      <p>Sign in as Super Admin or Admin, then visit <code>/admin</code>.</p>
+      <table>
+        <thead><tr><th>Role</th><th>Public site</th><th>Admin panel</th><th>Dashboard</th></tr></thead>
+        <tbody>
+          <tr><td>Super Admin</td><td>Yes</td><td>Full access</td><td>Yes</td></tr>
+          <tr><td>Admin</td><td>Yes</td><td>Full access</td><td>Yes</td></tr>
+          <tr><td>User</td><td>Yes</td><td>No</td><td>Own listings only</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Managing properties</h3>
+      <ol>
+        <li>Go to <strong>Admin → Properties</strong></li>
+        <li>Click <strong>Add property</strong></li>
+        <li>Fill in title, price, location, type, images (URLs), and details</li>
+        <li>Submit — the listing appears on the public site immediately</li>
+      </ol>
+
+      <h3>Managing users</h3>
+      <ol>
+        <li>Go to <strong>Admin → Users</strong></li>
+        <li>Add, edit, or remove team members and listing owners</li>
+      </ol>
+
+      <h2 id="production">Production build</h2>
+      <pre><code>npm run build
+npm start</code></pre>
+
+      <p>Before building for production, ensure:</p>
+      <ul>
+        <li><code>NEXTAUTH_SECRET</code> is a strong random string (32+ characters)</li>
+        <li><code>NEXTAUTH_URL</code> matches your live domain with HTTPS</li>
+        <li><code>NEXT_PUBLIC_SITE_URL</code> matches your live domain</li>
+        <li><code>SEED_DEMO_DATA</code> is not set (or is <code>false</code>)</li>
+      </ul>
+
+      <h3>Create ThemeForest upload ZIP</h3>
+      <pre><code>npm run package:themeforest</code></pre>
+      <p>Output: <code>dist/real-estate-app-themeforest-v1.0.0.zip</code></p>
+
+      <h2 id="deployment">Deployment</h2>
+      <h3>Vercel (recommended for Next.js)</h3>
+      <ol>
+        <li>Push code to GitHub</li>
+        <li>Import project at <a href="https://vercel.com">vercel.com</a></li>
+        <li>Add all environment variables from <code>.env.local</code></li>
+        <li>Use MongoDB Atlas for the database</li>
+        <li>Deploy</li>
+      </ol>
+
+      <h3>VPS (Ubuntu + PM2)</h3>
+      <pre><code>npm install
+npm run build
+pm2 start npm --name "real-estate" -- start
+pm2 save</code></pre>
+      <p>Put Nginx or Caddy in front for HTTPS. Set all env vars in your process manager or <code>.env.local</code> on the server.</p>
+
+      <h2 id="structure">Folder structure</h2>
+      <pre><code>real-estate-app/
+├── documentation/          ← This file
+├── scripts/                ← Packaging scripts
+├── src/
+│   ├── app/
+│   │   ├── (public)/       ← Public website pages
+│   │   ├── admin/          ← Admin panel
+│   │   ├── dashboard/      ← User dashboard
+│   │   └── api/            ← API routes
+│   ├── components/         ← React components
+│   └── lib/                ← Config, auth, database
+├── .env.example            ← Environment template
+├── LICENSE.txt               ← Envato license terms
+├── CHANGELOG.md
+├── README.md
+└── package.json</code></pre>
+
+      <h2 id="credits">Credits &amp; licenses</h2>
+      <ul>
+        <li><strong>Next.js</strong> — MIT License</li>
+        <li><strong>React</strong> — MIT License</li>
+        <li><strong>Tailwind CSS</strong> — MIT License</li>
+        <li><strong>NextAuth.js</strong> — ISC License</li>
+        <li><strong>Inter font</strong> — SIL Open Font License (via Google Fonts / next/font)</li>
+        <li><strong>Demo images</strong> — Unsplash (replace with client-owned assets in production; credit photographers if retained)</li>
+      </ul>
+      <p>Third-party licenses are included in <code>node_modules</code> after running <code>npm install</code>.</p>
+
+      <h2 id="changelog">Changelog</h2>
+      <p>See <code>CHANGELOG.md</code> in the project root for version history.</p>
+
+      <h3>v1.0.0</h3>
+      <ul>
+        <li>Initial release</li>
+        <li>White-label env configuration</li>
+        <li>MongoDB storage, admin panel, user dashboard</li>
+        <li>SEO, legal pages, responsive design</li>
+      </ul>
+
+      <h2 id="support">Support</h2>
+      <p>
+        If you encounter issues during installation, please contact the author
+        through your ThemeForest purchase page. Include:
+      </p>
+      <ul>
+        <li>Node.js version (<code>node -v</code>)</li>
+        <li>Operating system</li>
+        <li>Steps to reproduce the issue</li>
+        <li>Relevant error messages (redact secrets)</li>
+      </ul>
+      <p>Thank you for your purchase!</p>
+    </main>
+  </div>
+</body>
+</html>

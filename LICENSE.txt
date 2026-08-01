@@ -1,0 +1,18 @@
+White-Label Real Estate Platform
+Copyright (c) 2026. All rights reserved.
+
+This item is sold exclusively through ThemeForest (Envato Market).
+Your use of this software is governed by the Envato Market license
+you purchased:
+
+  Regular License  — https://themeforest.net/licenses/standard
+  Extended License — https://themeforest.net/licenses/extended
+
+You may not redistribute, resell, lease, or sublicense this item
+except as expressly permitted by your Envato license.
+
+Third-party open-source components (Next.js, React, Tailwind CSS,
+NextAuth.js, MongoDB driver, and others) retain their original
+licenses. See node_modules after running npm install.
+
+For support, contact the author through your ThemeForest purchase page.
