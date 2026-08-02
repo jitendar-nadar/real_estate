@@ -1,14 +1,6 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
-
-function getAuthSecret(): string {
-  const secret = process.env.NEXTAUTH_SECRET?.trim();
-  if (secret) return secret;
-  if (process.env.NODE_ENV === "production") {
-    throw new Error("NEXTAUTH_SECRET must be set in production");
-  }
-  return "estatehub-dev-secret-change-in-production";
-}
+import { getAuthSecret } from "@/lib/auth-secret";
 
 export default withAuth(
   function middleware(req) {

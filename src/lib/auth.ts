@@ -1,5 +1,6 @@
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { getAuthSecret } from "./auth-secret";
 import { verifyCredentials } from "./users";
 import { canAccessAdmin, type Role } from "./auth-types";
 
@@ -22,15 +23,6 @@ declare module "next-auth/jwt" {
     name?: string | null;
     role: Role;
   }
-}
-
-function getAuthSecret(): string {
-  const secret = process.env.NEXTAUTH_SECRET?.trim();
-  if (secret) return secret;
-  if (process.env.NODE_ENV === "production") {
-    throw new Error("NEXTAUTH_SECRET must be set in production");
-  }
-  return "estatehub-dev-secret-change-in-production";
 }
 
 export const authOptions: NextAuthOptions = {

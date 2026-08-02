@@ -1,17 +1,8 @@
 import * as jose from "jose";
 import type { Role } from "./auth-types";
+import { getJwtSecret } from "./auth-secret";
 
 const alg = "HS256";
-
-function getJwtSecret(): string {
-  const secret =
-    process.env.JWT_SECRET?.trim() || process.env.NEXTAUTH_SECRET?.trim();
-  if (secret) return secret;
-  if (process.env.NODE_ENV === "production") {
-    throw new Error("JWT_SECRET or NEXTAUTH_SECRET must be set in production");
-  }
-  return "estatehub-dev-secret-change-in-production";
-}
 
 export interface JwtPayload {
   sub: string;

@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { getAuthSecret } from "./auth-secret";
 import { verifyToken } from "./jwt";
 import type { Role } from "./auth-types";
 
@@ -63,7 +64,7 @@ export async function requireApiAuth(
   // 2. Check NextAuth session (cookie)
   const token = await getToken({
     req: request,
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: getAuthSecret(),
   });
 
   const userId = token?.sub ?? (token as { id?: string })?.id;
