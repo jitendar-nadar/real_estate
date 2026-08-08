@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { buildPageMetadata } from "@/lib/metadata";
 import { getSiteConfig } from "@/lib/site-config";
-import InquiryForm from "@/components/InquiryForm";
 
 const config = getSiteConfig();
 
@@ -73,16 +72,6 @@ export default function ContactPage() {
           Contact information is being updated. Please check back soon.
         </p>
       )}
-
-      <section className="mt-12 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 sm:p-8">
-        <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
-          Send us a message
-        </h2>
-        <p className="text-slate-600 dark:text-slate-400 mb-6 text-sm">
-          Have a question about a property or our services? Fill out the form below and we&apos;ll respond soon.
-        </p>
-        <InquiryForm />
-      </section>
 
       {socialEntries.length > 0 && (
         <div className="mt-10">

@@ -84,7 +84,7 @@ To verify the build and create an upload-ready ZIP:
 npm run package:themeforest
 ```
 
-Output: `dist/real-estate-app-main-v1.0.0.zip` (main file) and `dist/real-estate-app-documentation-v1.0.0.zip` (documentation)
+Output: `dist/real-estate-app-themeforest-v1.0.0.zip`
 
 Full buyer documentation: **[documentation/index.html](./documentation/index.html)**
 

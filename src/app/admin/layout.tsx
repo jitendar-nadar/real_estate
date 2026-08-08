@@ -7,10 +7,10 @@ import CompanyLogo from "@/components/CompanyLogo";
 import { getSiteConfig } from "@/lib/site-config";
 
 const nav = [
-  { href: "/admin", label: "Dashboard" },
-  { href: "/admin/properties", label: "Properties" },
-  { href: "/admin/inquiries", label: "Inquiries" },
+  { href: "/admin", label: "Properties" },
+  { href: "/admin/properties/new", label: "Add property" },
   { href: "/admin/users", label: "Users" },
+  { href: "/admin/users/new", label: "Add user" },
 ];
 
 export default async function AdminLayout({

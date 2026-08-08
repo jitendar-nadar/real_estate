@@ -1,109 +1,120 @@
 import Link from "next/link";
-import { getAdminProperties, getAllProperties } from "@/lib/data";
-import { getAllInquiries, getInquiryCounts } from "@/lib/data";
-import { getAllUsers } from "@/lib/db/users";
+import { getAdminProperties } from "@/lib/data";
+import { formatPriceINR } from "@/lib/format";
+import AdminPropertyActions from "@/components/AdminPropertyActions";
 
-export default async function AdminDashboardPage() {
-  const [properties, adminProperties, inquiries, inquiryCounts, users] = await Promise.all([
-    getAllProperties(),
-    getAdminProperties(),
-    getAllInquiries(),
-    getInquiryCounts(),
-    getAllUsers(),
-  ]);
-
-  const activeCount = properties.length;
-  const featuredCount = properties.filter((p) => p.featured).length;
-  const recentInquiries = inquiries.slice(0, 5);
-
-  const stats = [
-    { label: "Active listings", value: activeCount, href: "/admin/properties" },
-    { label: "Featured", value: featuredCount, href: "/listings?featured=1" },
-    { label: "New inquiries", value: inquiryCounts.new, href: "/admin/inquiries" },
-    { label: "Team members", value: users.length, href: "/admin/users" },
-  ];
+export default async function AdminPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ added?: string; updated?: string; deleted?: string; restored?: string }>;
+}) {
+  const params = await searchParams;
+  const properties = await getAdminProperties();
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-xl font-semibold text-slate-900 dark:text-white">Dashboard</h2>
-        <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-          Overview of listings, inquiries, and team activity.
+    <div>
+      {params.added === "1" && (
+        <div className="mb-6 rounded-lg bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-300 px-4 py-3 text-sm">
+          Property added successfully. It will appear on the listings.
+        </div>
+      )}
+      {params.updated === "1" && (
+        <div className="mb-6 rounded-lg bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-300 px-4 py-3 text-sm">
+          Property updated successfully.
+        </div>
+      )}
+      {params.deleted === "1" && (
+        <div className="mb-6 rounded-lg bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300 px-4 py-3 text-sm">
+          Property soft-deleted. It is hidden from listings and can be restored.
+        </div>
+      )}
+      {params.restored === "1" && (
+        <div className="mb-6 rounded-lg bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-300 px-4 py-3 text-sm">
+          Property restored. It will appear on the listings again.
+        </div>
+      )}
+      <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">
+        All properties ({properties.length})
+      </h2>
+
+      {properties.length === 0 ? (
+        <p className="text-slate-600 dark:text-slate-400 mb-4">
+          No properties yet. Add your first one.
         </p>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat) => (
-          <Link
-            key={stat.label}
-            href={stat.href}
-            className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 hover:border-primary-300 dark:hover:border-primary-700 transition-colors"
-          >
-            <p className="text-sm text-slate-500 dark:text-slate-400">{stat.label}</p>
-            <p className="mt-2 text-3xl font-bold text-slate-900 dark:text-white">{stat.value}</p>
-          </Link>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <section className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-slate-900 dark:text-white">Recent inquiries</h3>
-            <Link href="/admin/inquiries" className="text-sm text-primary-600 dark:text-primary-400 hover:underline">
-              View all
-            </Link>
-          </div>
-          {recentInquiries.length === 0 ? (
-            <p className="text-sm text-slate-600 dark:text-slate-400">No inquiries yet.</p>
-          ) : (
-            <ul className="space-y-3">
-              {recentInquiries.map((inquiry) => (
-                <li key={inquiry.id} className="border-b border-slate-100 dark:border-slate-700/50 pb-3 last:border-0 last:pb-0">
-                  <p className="font-medium text-slate-900 dark:text-white text-sm">{inquiry.name}</p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{inquiry.email}</p>
-                  {inquiry.propertyTitle && (
-                    <p className="text-xs text-primary-600 dark:text-primary-400 mt-1 truncate">
-                      Re: {inquiry.propertyTitle}
-                    </p>
-                  )}
-                </li>
+      ) : (
+        <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+          <table className="w-full text-left text-sm">
+            <thead>
+              <tr className="border-b border-slate-200 dark:border-slate-700">
+                <th className="px-4 py-3 font-medium text-slate-900 dark:text-white">
+                  Title
+                </th>
+                <th className="px-4 py-3 font-medium text-slate-900 dark:text-white">
+                  Location
+                </th>
+                <th className="px-4 py-3 font-medium text-slate-900 dark:text-white">
+                  Price
+                </th>
+                <th className="px-4 py-3 font-medium text-slate-900 dark:text-white">
+                  Type
+                </th>
+                <th className="px-4 py-3 font-medium text-slate-900 dark:text-white">
+                  Status
+                </th>
+                <th className="px-4 py-3 font-medium text-slate-900 dark:text-white">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {properties.map((p) => (
+                <tr
+                  key={p.id}
+                  className={`border-b border-slate-100 dark:border-slate-700/50 last:border-0 ${p.deletedAt ? "bg-slate-50 dark:bg-slate-800/70 opacity-90" : ""}`}
+                >
+                  <td className="px-4 py-3 text-slate-900 dark:text-white max-w-[200px] truncate">
+                    {p.title}
+                  </td>
+                  <td className="px-4 py-3 text-slate-600 dark:text-slate-400">
+                    {p.city}, {p.state}
+                  </td>
+                  <td className="px-4 py-3 text-slate-900 dark:text-white whitespace-nowrap">
+                    {formatPriceINR(p.price)}
+                  </td>
+                  <td className="px-4 py-3 text-slate-600 dark:text-slate-400 capitalize">
+                    {p.type}
+                  </td>
+                  <td className="px-4 py-3">
+                    {p.deletedAt ? (
+                      <span className="inline-flex items-center rounded-md bg-red-100 dark:bg-red-900/30 px-2 py-0.5 text-xs font-medium text-red-700 dark:text-red-300">
+                        Deleted
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center rounded-md bg-emerald-100 dark:bg-emerald-900/30 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-300">
+                        Active
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-4 py-3">
+                    <AdminPropertyActions
+                      propertyId={p.id}
+                      deletedAt={p.deletedAt ?? undefined}
+                    />
+                  </td>
+                </tr>
               ))}
-            </ul>
-          )}
-        </section>
+            </tbody>
+          </table>
+        </div>
+      )}
 
-        <section className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-slate-900 dark:text-white">Quick actions</h3>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <Link
-              href="/admin/properties/new"
-              className="rounded-lg border border-slate-200 dark:border-slate-600 px-4 py-3 text-sm font-medium text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700/50"
-            >
-              + Add property
-            </Link>
-            <Link
-              href="/admin/users/new"
-              className="rounded-lg border border-slate-200 dark:border-slate-600 px-4 py-3 text-sm font-medium text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700/50"
-            >
-              + Add user
-            </Link>
-            <Link
-              href="/admin/properties"
-              className="rounded-lg border border-slate-200 dark:border-slate-600 px-4 py-3 text-sm font-medium text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700/50"
-            >
-              Manage properties ({adminProperties.length})
-            </Link>
-            <Link
-              href="/"
-              target="_blank"
-              className="rounded-lg border border-slate-200 dark:border-slate-600 px-4 py-3 text-sm font-medium text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700/50"
-            >
-              View public site →
-            </Link>
-          </div>
-        </section>
+      <div className="mt-6">
+        <Link
+          href="/admin/properties/new"
+          className="inline-flex items-center rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-medium px-4 py-2"
+        >
+          Add property
+        </Link>
       </div>
     </div>
   );

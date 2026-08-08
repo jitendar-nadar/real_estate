@@ -2,22 +2,6 @@
 
 All notable changes to this project are documented here.
 
-## [1.1.0] – 2026-08-08
-
-### Added
-- Property inquiry form on contact and property detail pages
-- Admin inquiries management (`/admin/inquiries`)
-- Admin dashboard with stats and recent leads
-- Listings pagination, sort, and bedroom/bathroom filters
-- Related properties on property detail pages
-- Homepage stats bar, property type categories, and CTA section
-- Google Maps link on property detail pages
-
-### Security
-- Demo seed disabled entirely in production
-- Featured listings restricted to admin roles server-side
-- Super admin role assignment restricted to super admins
-
 ## [1.0.0] – 2026-07-27
 
 ### Added

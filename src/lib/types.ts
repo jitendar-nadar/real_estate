@@ -32,17 +32,3 @@ export interface SearchFilters {
   city?: string;
   sort?: "price-asc" | "price-desc" | "newest" | "area";
 }
-
-export type InquiryStatus = "new" | "read" | "archived";
-
-export interface Inquiry {
-  id: string;
-  name: string;
-  email: string;
-  phone?: string;
-  message: string;
-  propertyId?: string | null;
-  propertyTitle?: string | null;
-  status: InquiryStatus;
-  createdAt: string;
-}

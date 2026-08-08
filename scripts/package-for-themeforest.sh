@@ -5,19 +5,17 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PACKAGE_NAME="real-estate-app"
 VERSION="$(node -p "require('${ROOT_DIR}/package.json').version")"
 OUTPUT_DIR="${ROOT_DIR}/dist"
-MAIN_ZIP="${OUTPUT_DIR}/${PACKAGE_NAME}-main-v${VERSION}.zip"
-DOC_ZIP="${OUTPUT_DIR}/${PACKAGE_NAME}-documentation-v${VERSION}.zip"
-# Legacy alias for ThemeForest naming
-LEGACY_ZIP="${OUTPUT_DIR}/${PACKAGE_NAME}-themeforest-v${VERSION}.zip"
+ZIP_NAME="${PACKAGE_NAME}-themeforest-v${VERSION}.zip"
+ZIP_PATH="${OUTPUT_DIR}/${ZIP_NAME}"
 
-echo "==> Real Estate App — CodeCanyon / Envato packager"
+echo "==> Real Estate App — ThemeForest packager"
 echo "    Package folder: ${PACKAGE_NAME}"
 echo "    Version: ${VERSION}"
 echo ""
 
 cd "$ROOT_DIR"
 
-echo "==> Step 1/5: Verify production build..."
+echo "==> Step 1/4: Verify production build..."
 rm -rf .next
 export NEXTAUTH_SECRET="build-time-placeholder-secret-minimum-32-chars"
 export NEXTAUTH_URL="http://localhost:3000"
@@ -26,7 +24,7 @@ npm run build
 echo "    Build OK"
 echo ""
 
-echo "==> Step 2/5: Stage main application files..."
+echo "==> Step 2/4: Stage files for packaging..."
 STAGING_DIR="$(mktemp -d)"
 trap 'rm -rf "$STAGING_DIR"' EXIT
 
@@ -44,40 +42,21 @@ rsync -a \
 echo "    Staged to ${STAGING_DIR}/${PACKAGE_NAME}"
 echo ""
 
-echo "==> Step 3/5: Create output directory..."
+echo "==> Step 3/4: Create output directory..."
 mkdir -p "$OUTPUT_DIR"
-rm -f "$MAIN_ZIP" "$DOC_ZIP" "$LEGACY_ZIP"
+rm -f "$ZIP_PATH"
 echo ""
 
-echo "==> Step 4/5: Create main application ZIP..."
-(cd "$STAGING_DIR" && zip -r "$MAIN_ZIP" "$PACKAGE_NAME" > /dev/null)
-# Same file, legacy filename for existing docs
-cp "$MAIN_ZIP" "$LEGACY_ZIP"
-echo "    Main file: ${MAIN_ZIP}"
-echo ""
+echo "==> Step 4/4: Create ZIP (source only, no secrets/caches)..."
+(cd "$STAGING_DIR" && zip -r "$ZIP_PATH" "$PACKAGE_NAME" > /dev/null)
 
-echo "==> Step 5/5: Create documentation ZIP (optional Envato upload)..."
-DOC_STAGE="$(mktemp -d)"
-mkdir -p "$DOC_STAGE/documentation"
-cp "$ROOT_DIR/documentation/index.html" "$DOC_STAGE/documentation/"
-cp "$ROOT_DIR/install.txt" "$DOC_STAGE/"
-cp "$ROOT_DIR/README.md" "$DOC_STAGE/"
-cp "$ROOT_DIR/CHANGELOG.md" "$DOC_STAGE/"
-cp "$ROOT_DIR/LICENSE.txt" "$DOC_STAGE/"
-(cd "$DOC_STAGE" && zip -r "$DOC_ZIP" . > /dev/null)
-echo "    Documentation: ${DOC_ZIP}"
 echo ""
-
 echo "==> Done!"
+echo "    Upload this file to ThemeForest as your Main File:"
+echo "    ${ZIP_PATH}"
 echo ""
-echo "  CODECANYON UPLOAD — use these files:"
-echo "  ┌─────────────────────────────────────────────────────────────┐"
-echo "  │ Main File(s):     ${MAIN_ZIP}"
-echo "  │ Documentation:    ${DOC_ZIP}  (if separate slot available)"
-echo "  │ Live Preview URL: your Vercel demo URL"
-echo "  └─────────────────────────────────────────────────────────────┘"
-echo ""
-echo "  Category: CodeCanyon → JavaScript → Full Applications"
-echo ""
-echo "  Also prepare: thumbnail 80x80, preview 590x300, 6+ screenshots"
+echo "    Also prepare separately:"
+echo "    - Live demo URL"
+echo "    - 6+ screenshots (desktop + mobile)"
+echo "    - Thumbnail 80x80, preview 590x300"
 echo ""

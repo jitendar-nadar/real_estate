@@ -15,10 +15,10 @@ export default async function EditPropertyPage({
   return (
     <div className="max-w-2xl">
       <Link
-        href="/admin/properties"
+        href="/admin"
         className="text-sm text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 mb-6 inline-block"
       >
-        ← Back to properties
+        ← Back to admin
       </Link>
 
       <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
@@ -30,7 +30,7 @@ export default async function EditPropertyPage({
         </p>
       )}
 
-      <EditPropertyForm property={property} showFeatured />
+      <EditPropertyForm property={property} />
     </div>
   );
 }

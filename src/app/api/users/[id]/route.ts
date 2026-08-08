@@ -66,17 +66,12 @@ export async function PATCH(
 ) {
   const auth = await requireApiAuth(request, { roles: ADMIN_ROLES });
   if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
-  const actor = "user" in auth ? auth.user : null;
-  if (!actor) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
     const { id } = await params;
     const body = await request.json().catch(() => ({}));
     const result = validatePatchBody(body);
     if (!result.ok) return NextResponse.json({ error: result.error }, { status: 400 });
-    if (result.data.role === "super_admin" && actor.role !== "super_admin") {
-      return NextResponse.json({ error: "Only super admin can assign super admin role" }, { status: 403 });
-    }
     const user = await db.updateUser(id, result.data);
     if (!user) return NextResponse.json({ error: "Not found" }, { status: 404 });
     return NextResponse.json(user);
