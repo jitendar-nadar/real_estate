@@ -104,6 +104,9 @@ export async function PATCH(
     }
     const result = validatePatchBody(body);
     if (!result.ok) return NextResponse.json({ error: result.error }, { status: 400 });
+    if (result.data.featured !== undefined && !isAdmin) {
+      delete result.data.featured;
+    }
     const property = await db.getPropertyByIdForAdmin(id);
     if (!property) return NextResponse.json({ error: "Not found" }, { status: 404 });
     const updated = await db.updateProperty(id, result.data);

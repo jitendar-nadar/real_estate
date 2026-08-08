@@ -170,10 +170,7 @@ const SEED_USERS_INPUT: { id: string; email: string; name: string; role: StoredU
 export async function seedDbIfEmpty(): Promise<void> {
   if (!isMongoConfigured()) return;
 
-  const allowSeed =
-    process.env.NODE_ENV !== "production" ||
-    process.env.SEED_DEMO_DATA === "true";
-  if (!allowSeed) return;
+  if (process.env.NODE_ENV === "production") return;
 
   const db = await getDb();
   const propertiesCol = db.collection<Property>(PROPERTIES_COLLECTION);

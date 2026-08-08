@@ -18,12 +18,14 @@ interface EditPropertyFormProps {
   property: Property;
   successRedirect?: string;
   backHref?: string;
+  showFeatured?: boolean;
 }
 
 export default function EditPropertyForm({
   property,
-  successRedirect = "/admin?updated=1",
-  backHref = "/admin",
+  successRedirect = "/admin/properties?updated=1",
+  backHref = "/admin/properties",
+  showFeatured = false,
 }: EditPropertyFormProps) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
@@ -314,6 +316,7 @@ export default function EditPropertyForm({
         />
       </div>
 
+      {showFeatured && (
       <div className="flex items-center gap-2">
         <input
           type="checkbox"
@@ -326,6 +329,7 @@ export default function EditPropertyForm({
           Featured listing
         </label>
       </div>
+      )}
 
       <div className="flex gap-3 pt-4">
         <button

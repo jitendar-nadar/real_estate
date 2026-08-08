@@ -1,8 +1,17 @@
 import { Property } from "./types";
 import * as db from "./db/properties";
+import * as inquiriesDb from "./db/inquiries";
 
 export async function getAllProperties(): Promise<Property[]> {
   return db.getAllProperties();
+}
+
+export async function getAllInquiries() {
+  return inquiriesDb.getAllInquiries();
+}
+
+export async function getInquiryCounts() {
+  return inquiriesDb.getInquiryCounts();
 }
 
 /** All properties including soft-deleted (admin only) */
