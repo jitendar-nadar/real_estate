@@ -9,6 +9,7 @@ node_modules
 # Build output
 /dist/
 /build/
+*.zip
 
 # Environment (keep .env.example for buyers)
 .env

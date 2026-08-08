@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { Property, PropertyType } from "@/lib/types";
 import * as db from "@/lib/db/properties";
 import { requireApiAuth } from "@/lib/api-auth";
+import { ADMIN_ROLES } from "@/lib/auth-types";
+import { DEFAULT_PROPERTY_IMAGE } from "@/lib/constants";
 
 const PROPERTY_TYPES: PropertyType[] = ["house", "apartment", "condo", "land", "commercial"];
 
@@ -51,10 +53,18 @@ function validateBody(body: unknown): { ok: true; data: Omit<Property, "id" | "l
       city,
       state,
       zip,
-      images: images.length ? images : ["https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800"],
+      images: images.length ? images : [DEFAULT_PROPERTY_IMAGE],
       featured,
     },
   };
+}
+
+function applyFeaturedForRole(
+  featured: boolean,
+  role: string
+): boolean {
+  if (!featured) return false;
+  return ADMIN_ROLES.includes(role as import("@/lib/auth-types").Role);
 }
 
 export async function GET() {
@@ -84,6 +94,7 @@ export async function POST(request: NextRequest) {
 
     const newProperty = await db.createProperty({
       ...result.data,
+      featured: applyFeaturedForRole(result.data.featured ?? false, user.role),
       createdBy: user.id,
     });
     return NextResponse.json(newProperty, { status: 201 });

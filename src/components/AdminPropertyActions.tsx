@@ -18,7 +18,7 @@ export default function AdminPropertyActions({
 }: AdminPropertyActionsProps) {
   const router = useRouter();
   const [loading, setLoading] = useState<"delete" | "restore" | null>(null);
-  const redirectBase = basePath === "dashboard" ? "/dashboard" : "/admin";
+  const redirectBase = basePath === "dashboard" ? "/dashboard" : "/admin/properties";
   const viewHref =
     basePath === "dashboard"
       ? `/dashboard/properties/${propertyId}`

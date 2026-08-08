@@ -19,6 +19,7 @@ interface NewPropertyFormProps {
   backLabel: string;
   successRedirect: string;
   title?: string;
+  showFeatured?: boolean;
 }
 
 export default function NewPropertyForm({
@@ -26,6 +27,7 @@ export default function NewPropertyForm({
   backLabel,
   successRedirect,
   title = "Add new property",
+  showFeatured = false,
 }: NewPropertyFormProps) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
@@ -328,6 +330,7 @@ export default function NewPropertyForm({
           />
         </div>
 
+        {showFeatured && (
         <div className="flex items-center gap-2">
           <input
             type="checkbox"
@@ -340,6 +343,7 @@ export default function NewPropertyForm({
             Featured listing
           </label>
         </div>
+        )}
 
         <div className="flex gap-3 pt-4">
           <button

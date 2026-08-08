@@ -1,0 +1,47 @@
+White-Label Real Estate Platform
+================================
+
+Thank you for your purchase!
+
+QUICK START
+-----------
+1. Extract this ZIP
+2. Open terminal in the "real-estate-app" folder
+3. Run: npm install
+4. Run: cp .env.example .env.local
+5. Edit .env.local (MongoDB URI, NEXTAUTH_SECRET, URLs)
+6. Run: npm run dev
+7. Open http://localhost:3000
+
+FULL DOCUMENTATION
+------------------
+Open documentation/index.html in your browser for the complete guide:
+  - Environment variables
+  - MongoDB Atlas setup
+  - White-label branding
+  - Vercel deployment
+  - Admin panel usage
+
+REQUIREMENTS
+------------
+  - Node.js 18+
+  - npm 9+
+  - MongoDB 6+ (local or MongoDB Atlas)
+
+DEMO DATA (development only — auto-seeds when NODE_ENV=development)
+-------------------------------------------------------------------
+Demo users and sample properties are seeded automatically in development.
+Demo login:
+  Super Admin: superadmin@estatehub.com / superadmin123
+  Admin:       admin@estatehub.com / admin123
+  User:        user@estatehub.com / user123
+
+Note: Seeding is disabled in production. Create admin users via MongoDB or a one-time setup script.
+
+SUPPORT
+-------
+Contact the author via your CodeCanyon purchase page.
+
+LICENSE
+-------
+See LICENSE.txt — Envato Market Regular/Extended License.

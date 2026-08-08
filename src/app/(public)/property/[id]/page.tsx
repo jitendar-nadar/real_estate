@@ -2,11 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getPropertyById } from "@/lib/data";
+import { getPropertyById, getAllProperties } from "@/lib/data";
 import { formatPriceINR } from "@/lib/format";
 import { buildPageMetadata } from "@/lib/metadata";
 import { getSiteConfig } from "@/lib/site-config";
 import PropertyShareActions from "@/components/PropertyShareActions";
+import PropertyCard from "@/components/PropertyCard";
+import InquiryForm from "@/components/InquiryForm";
 
 export async function generateMetadata({
   params,
@@ -42,6 +44,11 @@ export default async function PropertyPage({
   const property = await getPropertyById(id);
   if (!property) notFound();
 
+  const allProperties = await getAllProperties();
+  const related = allProperties
+    .filter((p) => p.id !== property.id && (p.city === property.city || p.type === property.type))
+    .slice(0, 3);
+
   const { contactPhone, contactEmail, siteUrl } = getSiteConfig();
 
   const [primaryImage, ...restImages] = property.images;
@@ -56,6 +63,10 @@ export default async function PropertyPage({
   ]
     .filter(Boolean)
     .join("\n\n");
+
+  const mapQuery = encodeURIComponent(
+    `${property.address}, ${property.city}, ${property.state} ${property.zip}`
+  );
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
@@ -152,40 +163,35 @@ export default async function PropertyPage({
             <div className="mt-8 space-y-6">
               <div>
                 <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-3">Contact agent</p>
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex flex-col sm:flex-row gap-3 mb-6">
                   {contactPhone && (
                     <a
                       href={`tel:${contactPhone.replace(/\s/g, "")}`}
-                      className="touch-target inline-flex items-center justify-center gap-2 rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-medium px-5 py-3 shadow-sm transition focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900"
+                      className="touch-target inline-flex items-center justify-center gap-2 rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-medium px-5 py-3 shadow-sm transition"
                     >
-                      <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                      </svg>
                       Call agent
                     </a>
                   )}
                   {contactEmail && (
                     <a
                       href={`mailto:${contactEmail}`}
-                      className="touch-target inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium px-5 py-3 shadow-sm transition hover:bg-slate-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900"
+                      className="touch-target inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium px-5 py-3 shadow-sm transition hover:bg-slate-50 dark:hover:bg-slate-700"
                     >
-                      <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                        <polyline points="22,6 12,13 2,6" />
-                      </svg>
                       Email agent
                     </a>
                   )}
-                  {!contactPhone && !contactEmail && (
-                    <Link
-                      href="/contact"
-                      className="text-sm text-primary-600 dark:text-primary-400 font-medium hover:underline"
-                    >
-                      Contact us for inquiries →
-                    </Link>
-                  )}
                 </div>
+                <InquiryForm propertyId={property.id} propertyTitle={property.title} submitLabel="Send inquiry" />
               </div>
+
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-sm font-medium text-primary-600 dark:text-primary-400 hover:underline"
+              >
+                View location on map →
+              </a>
 
               <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
                 <PropertyShareActions propertyUrl={propertyUrl} shareMessage={shareMessage} />
@@ -194,6 +200,17 @@ export default async function PropertyPage({
           </div>
         </div>
       </div>
+
+      {related.length > 0 && (
+        <section className="mt-14 border-t border-slate-200 dark:border-slate-700 pt-10">
+          <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-6">Related properties</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {related.map((p) => (
+              <PropertyCard key={p.id} property={p} />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

@@ -36,11 +36,16 @@ function validateBody(body: unknown): { ok: true; data: { email: string; name: s
 export async function POST(request: NextRequest) {
   const auth = await requireApiAuth(request, { roles: ADMIN_ROLES });
   if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
+  const actor = "user" in auth ? auth.user : null;
+  if (!actor) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
     const body = await request.json().catch(() => ({}));
     const result = validateBody(body);
     if (!result.ok) return NextResponse.json({ error: result.error }, { status: 400 });
+    if (result.data.role === "super_admin" && actor.role !== "super_admin") {
+      return NextResponse.json({ error: "Only super admin can create super admin users" }, { status: 403 });
+    }
     const user = await db.createUser(result.data);
     return NextResponse.json(user, { status: 201 });
   } catch (e) {
