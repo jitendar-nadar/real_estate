@@ -1,6 +1,6 @@
 import * as jose from "jose";
 import type { Role } from "./auth-types";
-import { getJwtSecret } from "./auth-secret";
+import { getJwtSecretSafe } from "./auth-secret";
 
 const alg = "HS256";
 
@@ -14,7 +14,7 @@ export interface JwtPayload {
 }
 
 export async function signToken(payload: Omit<JwtPayload, "iat" | "exp">): Promise<string> {
-  const key = new TextEncoder().encode(getJwtSecret());
+  const key = new TextEncoder().encode(getJwtSecretSafe());
   return new jose.SignJWT({
     email: payload.email,
     name: payload.name,
@@ -29,7 +29,7 @@ export async function signToken(payload: Omit<JwtPayload, "iat" | "exp">): Promi
 
 export async function verifyToken(token: string): Promise<JwtPayload | null> {
   try {
-    const key = new TextEncoder().encode(getJwtSecret());
+    const key = new TextEncoder().encode(getJwtSecretSafe());
     const { payload } = await jose.jwtVerify(token, key);
     return {
       sub: payload.sub as string,

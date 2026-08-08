@@ -1,9 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import { getServerSession } from "next-auth";
 import "./globals.css";
 import SessionProvider from "@/components/SessionProvider";
-import { authOptions } from "@/lib/auth";
+import { getServerSessionSafe } from "@/lib/auth";
 import { buildRootMetadata } from "@/lib/metadata";
 import { getPrimaryColorStyle, getSiteConfig } from "@/lib/site-config";
 
@@ -29,7 +28,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSessionSafe();
   const primaryColorStyle = getPrimaryColorStyle(siteConfig.primaryColor);
 
   return (

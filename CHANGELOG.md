@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented here.
 
+### [1.1.1] – 2026-08-08
+
+### Changed
+- Health endpoint now returns app name and version for deployment verification
+
 ## [1.1.0] – 2026-08-08
 
 ### Added

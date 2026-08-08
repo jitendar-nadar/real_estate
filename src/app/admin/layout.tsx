@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getServerSessionSafe } from "@/lib/auth";
 import { canAccessAdmin } from "@/lib/auth-types";
 import AppShell from "@/components/AppShell";
 import CompanyLogo from "@/components/CompanyLogo";
@@ -18,7 +17,7 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSessionSafe();
   if (!session?.user) redirect("/login?callbackUrl=/admin");
   if (!canAccessAdmin(session.user.role)) redirect("/dashboard");
 

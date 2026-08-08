@@ -1,6 +1,6 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
-import { getAuthSecret } from "@/lib/auth-secret";
+import { getAuthSecretSafe } from "@/lib/auth-secret";
 
 export default withAuth(
   function middleware(req) {
@@ -22,7 +22,7 @@ export default withAuth(
     return NextResponse.next();
   },
   {
-    secret: getAuthSecret(),
+    secret: getAuthSecretSafe(),
     callbacks: {
       authorized: ({ token, req }) => {
         if (req.nextUrl.pathname.startsWith("/admin")) return !!token;

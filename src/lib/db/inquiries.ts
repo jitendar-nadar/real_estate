@@ -42,13 +42,18 @@ export async function createInquiry(data: {
 
 export async function getAllInquiries(): Promise<Inquiry[]> {
   if (!isMongoConfigured()) return [];
-  const db = await getDb();
-  const list = await db
-    .collection<Inquiry>(COLLECTION)
-    .find({})
-    .sort({ createdAt: -1 })
-    .toArray();
-  return list.map(toInquiry);
+  try {
+    const db = await getDb();
+    const list = await db
+      .collection<Inquiry>(COLLECTION)
+      .find({})
+      .sort({ createdAt: -1 })
+      .toArray();
+    return list.map(toInquiry);
+  } catch (error) {
+    console.error("getAllInquiries error:", error);
+    return [];
+  }
 }
 
 export async function getInquiryCounts(): Promise<{
@@ -56,13 +61,18 @@ export async function getInquiryCounts(): Promise<{
   new: number;
 }> {
   if (!isMongoConfigured()) return { total: 0, new: 0 };
-  const db = await getDb();
-  const col = db.collection<Inquiry>(COLLECTION);
-  const [total, newCount] = await Promise.all([
-    col.countDocuments(),
-    col.countDocuments({ status: "new" }),
-  ]);
-  return { total, new: newCount };
+  try {
+    const db = await getDb();
+    const col = db.collection<Inquiry>(COLLECTION);
+    const [total, newCount] = await Promise.all([
+      col.countDocuments(),
+      col.countDocuments({ status: "new" }),
+    ]);
+    return { total, new: newCount };
+  } catch (error) {
+    console.error("getInquiryCounts error:", error);
+    return { total: 0, new: 0 };
+  }
 }
 
 export async function updateInquiryStatus(

@@ -1,6 +1,7 @@
-import type { NextAuthOptions } from "next-auth";
+import type { NextAuthOptions, Session } from "next-auth";
+import { getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getAuthSecret } from "./auth-secret";
+import { getAuthSecretSafe } from "./auth-secret";
 import { verifyCredentials } from "./users";
 import { canAccessAdmin, type Role } from "./auth-types";
 
@@ -75,7 +76,16 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/login",
   },
-  secret: getAuthSecret(),
+  secret: getAuthSecretSafe(),
 };
+
+export async function getServerSessionSafe(): Promise<Session | null> {
+  try {
+    return await getServerSession(authOptions);
+  } catch (err) {
+    console.error("getServerSession error:", err);
+    return null;
+  }
+}
 
 export { canAccessAdmin };

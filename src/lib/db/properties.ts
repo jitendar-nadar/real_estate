@@ -19,8 +19,8 @@ async function withDb<T>(fallback: T, fn: (db: Awaited<ReturnType<typeof getDb>>
     const db = await getDb();
     return await fn(db);
   } catch (e) {
-    if (e instanceof Error && e.message.includes("MONGODB_URI")) return fallback;
-    throw e;
+    console.error("Database error:", e);
+    return fallback;
   }
 }
 

@@ -1,9 +1,12 @@
 node_modules/
-.next/
+**/.next/
 out/
 dist/
 build/
 coverage/
 .vercel/
 .turbo/
+.cache/
+.pnpm-store/
 *.log
+*.zip

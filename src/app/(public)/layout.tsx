@@ -1,15 +1,14 @@
-import { getServerSession } from "next-auth";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CompanyLogo from "@/components/CompanyLogo";
-import { authOptions } from "@/lib/auth";
+import { getServerSessionSafe } from "@/lib/auth";
 
 export default async function PublicLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSessionSafe();
 
   return (
     <>
