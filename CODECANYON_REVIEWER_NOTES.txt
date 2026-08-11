@@ -1,0 +1,60 @@
+CODECANYON — NOTES TO REVIEWER
+==============================
+
+Replace [YOUR_DEMO_URL] with your live Vercel URL before submitting.
+
+LIVE PREVIEW
+------------
+URL:          [YOUR_DEMO_URL]
+Health check: [YOUR_DEMO_URL]/api/health
+Login:        [YOUR_DEMO_URL]/login
+
+DEMO CREDENTIALS (pre-seeded on live preview)
+---------------------------------------------
+Super Admin: superadmin@primenest.com / superadmin123
+Admin:       admin@primenest.com / admin123
+User:        user@primenest.com / user123
+
+WHAT THIS ITEM IS
+-----------------
+A white-label property listing portal for real estate agencies — NOT a multi-vendor
+marketplace. Buyers rebrand the entire site via .env.local without code changes.
+
+STACK
+-----
+Next.js 14 · TypeScript · Tailwind CSS · MongoDB · NextAuth.js
+
+REVIEWER TEST FLOW (~5 minutes)
+-------------------------------
+1. Browse homepage and /listings — 8 sample properties
+2. Open a property → view embedded map → submit inquiry form
+3. Login as Admin → /admin/inquiries — verify lead appears
+4. Admin → Properties → Add property → upload images → save
+5. /admin — dashboard stats
+
+SETUP FOR BUYERS (~10 minutes)
+------------------------------
+See install.txt and documentation/index.html inside the package.
+
+Requires: Node 18+, MongoDB 6+ (Atlas free tier works).
+
+KEY FEATURES (v1.2.0)
+---------------------
+- Public listings site with search, filters, pagination
+- Embedded Google Maps on property detail
+- Property image upload (local /public/uploads)
+- Inquiry/leads management in admin
+- Email notifications via Resend (optional)
+- Role-based admin + user dashboard
+- White-label branding via environment variables
+- REST API with JWT bearer tokens
+- SEO: sitemap, robots, Open Graph
+
+LIVE PREVIEW SETUP (author notes)
+---------------------------------
+Vercel env vars required:
+  MONGODB_URI, NEXTAUTH_SECRET, NEXTAUTH_URL, NEXT_PUBLIC_SITE_URL
+One-time: SEED_DEMO_DATA=true → deploy → visit site → remove and redeploy
+
+Optional email on inquiry:
+  NOTIFY_EMAIL, EMAIL_FROM, RESEND_API_KEY

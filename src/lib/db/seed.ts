@@ -162,15 +162,17 @@ export const SEED_PROPERTIES: Property[] = [
 ];
 
 const SEED_USERS_INPUT: { id: string; email: string; name: string; role: StoredUser["role"]; password: string }[] = [
-  { id: "1", email: "superadmin@estatehub.com", name: "Super Admin", role: "super_admin", password: "superadmin123" },
-  { id: "2", email: "admin@estatehub.com", name: "Admin", role: "admin", password: "admin123" },
-  { id: "3", email: "user@estatehub.com", name: "User", role: "user", password: "user123" },
+  { id: "1", email: "superadmin@primenest.com", name: "Super Admin", role: "super_admin", password: "superadmin123" },
+  { id: "2", email: "admin@primenest.com", name: "Admin", role: "admin", password: "admin123" },
+  { id: "3", email: "user@primenest.com", name: "User", role: "user", password: "user123" },
 ];
 
 export async function seedDbIfEmpty(): Promise<void> {
   if (!isMongoConfigured()) return;
 
-  if (process.env.NODE_ENV === "production") return;
+  const seedEnabled =
+    process.env.NODE_ENV !== "production" || process.env.SEED_DEMO_DATA === "true";
+  if (!seedEnabled) return;
 
   const db = await getDb();
   const propertiesCol = db.collection<Property>(PROPERTIES_COLLECTION);

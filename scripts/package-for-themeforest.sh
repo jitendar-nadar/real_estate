@@ -64,6 +64,7 @@ cp "$ROOT_DIR/install.txt" "$DOC_STAGE/"
 cp "$ROOT_DIR/README.md" "$DOC_STAGE/"
 cp "$ROOT_DIR/CHANGELOG.md" "$DOC_STAGE/"
 cp "$ROOT_DIR/LICENSE.txt" "$DOC_STAGE/"
+cp "$ROOT_DIR/CODECANYON_REVIEWER_NOTES.txt" "$DOC_STAGE/"
 (cd "$DOC_STAGE" && zip -r "$DOC_ZIP" . > /dev/null)
 echo "    Documentation: ${DOC_ZIP}"
 echo ""

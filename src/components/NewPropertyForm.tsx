@@ -5,6 +5,7 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { PropertyType } from "@/lib/types";
 import { indianStates, getCitiesByState } from "@/lib/locations";
+import ImageUploadField from "@/components/ImageUploadField";
 
 const PROPERTY_TYPES: { value: PropertyType; label: string }[] = [
   { value: "house", label: "House" },
@@ -317,18 +318,10 @@ export default function NewPropertyForm({
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-            Image URLs (one per line or comma-separated)
-          </label>
-          <textarea
-            value={form.images}
-            onChange={(e) => setForm((f) => ({ ...f, images: e.target.value }))}
-            rows={2}
-            placeholder="https://..."
-            className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-slate-900 dark:text-white"
-          />
-        </div>
+        <ImageUploadField
+          value={form.images}
+          onChange={(images) => setForm((f) => ({ ...f, images }))}
+        />
 
         {showFeatured && (
         <div className="flex items-center gap-2">

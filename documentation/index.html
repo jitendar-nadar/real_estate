@@ -125,7 +125,7 @@
   <div class="layout">
     <nav>
       <h1>Real Estate Platform</h1>
-      <p>v1.0.0 · Documentation</p>
+      <p>v1.2.0 · Documentation</p>
       <a href="#introduction">Introduction</a>
       <a href="#requirements">Requirements</a>
       <a href="#installation">Installation</a>
@@ -160,6 +160,10 @@
         <li>Admin panel for properties and user management</li>
         <li>User dashboard for listing owners</li>
         <li>Role-based access: Super Admin, Admin, User</li>
+        <li>Property inquiry forms and admin leads management</li>
+        <li>Embedded Google Maps on property detail pages</li>
+        <li>Property image upload (local storage)</li>
+        <li>Optional email notifications on new inquiries (Resend)</li>
         <li>SEO: sitemap, robots.txt, Open Graph metadata</li>
         <li>Contact, Privacy, and Terms pages</li>
       </ul>
@@ -220,7 +224,10 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000</code></pre>
           <tr><td><code>NEXT_PUBLIC_CONTACT_EMAIL</code></td><td>No</td><td>Contact email</td></tr>
           <tr><td><code>NEXT_PUBLIC_COMPANY_ADDRESS</code></td><td>No</td><td>Office address</td></tr>
           <tr><td><code>NEXT_PUBLIC_SOCIAL_*</code></td><td>No</td><td>Social profile URLs (Facebook, Instagram, etc.)</td></tr>
-          <tr><td><code>SEED_DEMO_DATA</code></td><td>No</td><td>Set to <code>true</code> for dev demo seed only</td></tr>
+          <tr><td><code>SEED_DEMO_DATA</code></td><td>No</td><td>Set <code>true</code> to seed demo users/properties when DB is empty (dev or one-time live preview)</td></tr>
+          <tr><td><code>NOTIFY_EMAIL</code></td><td>No</td><td>Recipient for new inquiry email alerts</td></tr>
+          <tr><td><code>RESEND_API_KEY</code></td><td>No</td><td>Resend.com API key for email notifications</td></tr>
+          <tr><td><code>EMAIL_FROM</code></td><td>No</td><td>Sender for Resend (e.g. <code>Site &lt;onboarding@resend.dev&gt;</code>)</td></tr>
         </tbody>
       </table>
 
@@ -270,20 +277,31 @@ MONGODB_URI=mongodb://localhost:27017</code></pre>
       <p>The database and collections are created automatically on first run.</p>
 
       <h2 id="demo-data">Demo data &amp; accounts</h2>
-      <p>To populate sample properties and users on first run (development only):</p>
+      <p>Populate sample properties and users when the database is empty:</p>
+
+      <h3>Development</h3>
       <pre><code>SEED_DEMO_DATA=true</code></pre>
+      <p>Or run once from the project root:</p>
+      <pre><code>npm run seed:demo</code></pre>
+
+      <h3>Live preview (Vercel / production)</h3>
+      <ol>
+        <li>Set <code>SEED_DEMO_DATA=true</code> in your host environment variables</li>
+        <li>Deploy and visit the site once (first request seeds the database)</li>
+        <li>Remove <code>SEED_DEMO_DATA</code> and redeploy after demo data is populated</li>
+      </ol>
 
       <div class="warn">
-        <strong>Never enable <code>SEED_DEMO_DATA</code> in production.</strong> Demo seed is blocked when <code>NODE_ENV=production</code> unless explicitly set.
+        <strong>Remove <code>SEED_DEMO_DATA</code> after bootstrapping a production site</strong> so demo accounts are not recreated if collections are cleared.
       </div>
 
-      <p>Development demo accounts (shown on login page in dev mode only):</p>
+      <p>Demo accounts (after seed):</p>
       <table>
         <thead><tr><th>Role</th><th>Email</th><th>Password</th></tr></thead>
         <tbody>
-          <tr><td>Super Admin</td><td>superadmin@estatehub.com</td><td>superadmin123</td></tr>
-          <tr><td>Admin</td><td>admin@estatehub.com</td><td>admin123</td></tr>
-          <tr><td>User</td><td>user@estatehub.com</td><td>user123</td></tr>
+          <tr><td>Super Admin</td><td>superadmin@primenest.com</td><td>superadmin123</td></tr>
+          <tr><td>Admin</td><td>admin@primenest.com</td><td>admin123</td></tr>
+          <tr><td>User</td><td>user@primenest.com</td><td>user123</td></tr>
         </tbody>
       </table>
 
@@ -302,7 +320,7 @@ MONGODB_URI=mongodb://localhost:27017</code></pre>
       <ol>
         <li>Go to <strong>Admin → Properties</strong></li>
         <li>Click <strong>Add property</strong></li>
-        <li>Fill in title, price, location, type, images (URLs), and details</li>
+        <li>Fill in title, price, location, type, images (upload or URLs), and details</li>
         <li>Submit — the listing appears on the public site immediately</li>
       </ol>
 
@@ -321,21 +339,22 @@ npm start</code></pre>
         <li><code>NEXTAUTH_SECRET</code> is a strong random string (32+ characters)</li>
         <li><code>NEXTAUTH_URL</code> matches your live domain with HTTPS</li>
         <li><code>NEXT_PUBLIC_SITE_URL</code> matches your live domain</li>
-        <li><code>SEED_DEMO_DATA</code> is not set (or is <code>false</code>)</li>
+        <li><code>SEED_DEMO_DATA</code> is removed after live preview is bootstrapped</li>
       </ul>
 
       <h3>Create ThemeForest upload ZIP</h3>
       <pre><code>npm run package:themeforest</code></pre>
-      <p>Output: <code>dist/real-estate-app-themeforest-v1.0.0.zip</code></p>
+      <p>Output: <code>dist/real-estate-app-main-v1.2.0.zip</code></p>
 
       <h2 id="deployment">Deployment</h2>
       <h3>Vercel (recommended for Next.js)</h3>
       <ol>
         <li>Push code to GitHub</li>
         <li>Import project at <a href="https://vercel.com">vercel.com</a></li>
-        <li>Add all environment variables from <code>.env.local</code></li>
-        <li>Use MongoDB Atlas for the database</li>
-        <li>Deploy</li>
+        <li>Add environment variables: <code>MONGODB_URI</code>, <code>NEXTAUTH_SECRET</code>, <code>NEXTAUTH_URL</code>, <code>NEXT_PUBLIC_SITE_URL</code></li>
+        <li>For live preview: temporarily set <code>SEED_DEMO_DATA=true</code>, deploy, visit site, then remove</li>
+        <li>Use MongoDB Atlas — allow <code>0.0.0.0/0</code> in Network Access for Vercel</li>
+        <li>Verify: <code>/api/health</code> returns <code>"status":"ok"</code></li>
       </ol>
 
       <h3>VPS (Ubuntu + PM2)</h3>
@@ -376,6 +395,18 @@ pm2 save</code></pre>
 
       <h2 id="changelog">Changelog</h2>
       <p>See <code>CHANGELOG.md</code> in the project root for version history.</p>
+
+      <h3>v1.2.0</h3>
+      <ul>
+        <li>Production demo bootstrap (<code>npm run seed:demo</code>, <code>SEED_DEMO_DATA</code>)</li>
+        <li>Embedded Google Maps, image upload, inquiry email alerts</li>
+        <li>Documentation and reviewer notes updated</li>
+      </ul>
+
+      <h3>v1.1.0</h3>
+      <ul>
+        <li>Inquiry forms, admin dashboard, listings pagination/filters</li>
+      </ul>
 
       <h3>v1.0.0</h3>
       <ul>

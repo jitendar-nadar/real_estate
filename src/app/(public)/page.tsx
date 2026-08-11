@@ -9,6 +9,7 @@ import { PropertyType } from "@/lib/types";
 const PROPERTY_TYPES: { type: PropertyType; label: string; description: string }[] = [
   { type: "apartment", label: "Apartments", description: "Urban flats and high-rise living" },
   { type: "house", label: "Houses", description: "Independent homes and villas" },
+  { type: "condo", label: "Condos", description: "Condominiums and shared-ownership units" },
   { type: "commercial", label: "Commercial", description: "Offices, retail, and business spaces" },
   { type: "land", label: "Land", description: "Residential and commercial plots" },
 ];
@@ -72,7 +73,7 @@ export default async function HomePage() {
                 <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">Cities covered</p>
               </div>
               <div>
-                <p className="text-3xl font-bold text-primary-600 dark:text-primary-400">4</p>
+                <p className="text-3xl font-bold text-primary-600 dark:text-primary-400">5</p>
                 <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">Property types</p>
               </div>
             </div>
@@ -96,7 +97,7 @@ export default async function HomePage() {
             <h2 className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white mb-6">
               Browse by property type
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
               {typeCounts.map(({ type, label, description, count }) => (
                 <Link
                   key={type}

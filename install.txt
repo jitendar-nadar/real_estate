@@ -21,6 +21,7 @@ Open documentation/index.html in your browser for the complete guide:
   - White-label branding
   - Vercel deployment
   - Admin panel usage
+  - Image upload & email notifications
 
 REQUIREMENTS
 ------------
@@ -28,15 +29,21 @@ REQUIREMENTS
   - npm 9+
   - MongoDB 6+ (local or MongoDB Atlas)
 
-DEMO DATA (development only — auto-seeds when NODE_ENV=development)
--------------------------------------------------------------------
-Demo users and sample properties are seeded automatically in development.
-Demo login:
-  Super Admin: superadmin@estatehub.com / superadmin123
-  Admin:       admin@estatehub.com / admin123
-  User:        user@estatehub.com / user123
+DEMO DATA
+---------
+Development (automatic on first request when DB is empty):
+  Set SEED_DEMO_DATA=true in .env.local, or run:
+    npm run seed:demo
 
-Note: Seeding is disabled in production. Create admin users via MongoDB or a one-time setup script.
+Production / live preview (one-time bootstrap):
+  1. Set SEED_DEMO_DATA=true in Vercel/host env vars
+  2. Deploy and visit the site once (seeds users + 8 sample properties)
+  3. Remove SEED_DEMO_DATA and redeploy after demo is populated
+
+Demo login (after seed):
+  Super Admin: superadmin@primenest.com / superadmin123
+  Admin:       admin@primenest.com / admin123
+  User:        user@primenest.com / user123
 
 SUPPORT
 -------

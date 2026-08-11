@@ -9,6 +9,7 @@ import { getSiteConfig } from "@/lib/site-config";
 import PropertyShareActions from "@/components/PropertyShareActions";
 import PropertyCard from "@/components/PropertyCard";
 import InquiryForm from "@/components/InquiryForm";
+import PropertyMapEmbed from "@/components/PropertyMapEmbed";
 
 export async function generateMetadata({
   params,
@@ -188,10 +189,17 @@ export default async function PropertyPage({
                 href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-sm font-medium text-primary-600 dark:text-primary-400 hover:underline"
+                className="sr-only"
               >
-                View location on map →
+                View location on map
               </a>
+
+              <PropertyMapEmbed
+                address={property.address}
+                city={property.city}
+                state={property.state}
+                zip={property.zip}
+              />
 
               <div className="pt-4 border-t border-slate-200 dark:border-slate-700">
                 <PropertyShareActions propertyUrl={propertyUrl} shareMessage={shareMessage} />

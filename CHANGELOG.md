@@ -2,6 +2,20 @@
 
 All notable changes to this project are documented here.
 
+## [1.2.0] – 2026-08-11
+
+### Added
+- Production demo bootstrap: `npm run seed:demo` and `SEED_DEMO_DATA=true` support
+- Embedded Google Maps on property detail pages
+- Property image upload (admin/dashboard forms + `/api/upload`)
+- Email notifications on new inquiries (optional Resend integration)
+- CodeCanyon reviewer notes template (`CODECANYON_REVIEWER_NOTES.txt`)
+
+### Changed
+- Demo accounts rebranded to `@primenest.com`
+- Documentation aligned with v1.2.0 (seed, email, upload, deployment)
+- Homepage shows all 5 property types
+
 ### [1.1.1] – 2026-08-08
 
 ### Changed

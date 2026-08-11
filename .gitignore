@@ -66,3 +66,7 @@ coverage/
 
 # Legacy / local-only folders
 realestate-website/
+
+# User-uploaded property images (keep folder)
+public/uploads/*
+!public/uploads/.gitkeep

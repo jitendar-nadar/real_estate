@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import * as db from "@/lib/db/inquiries";
 import { requireApiAuth } from "@/lib/api-auth";
 import { ADMIN_ROLES } from "@/lib/auth-types";
+import { getNotifyEmail, sendInquiryNotification } from "@/lib/email";
+import { getSiteConfig } from "@/lib/site-config";
 
 export const dynamic = "force-dynamic";
 
@@ -44,6 +46,13 @@ export async function POST(request: NextRequest) {
     if (!result.ok) return NextResponse.json({ error: result.error }, { status: 400 });
 
     const inquiry = await db.createInquiry(result.data);
+
+    const notifyEmail = getNotifyEmail();
+    if (notifyEmail) {
+      const { companyName } = getSiteConfig();
+      void sendInquiryNotification({ inquiry, siteName: companyName, notifyEmail });
+    }
+
     return NextResponse.json({ success: true, id: inquiry.id }, { status: 201 });
   } catch (e) {
     console.error(e);

@@ -5,10 +5,13 @@ A production-ready, white-label real estate listing platform built with **Next.j
 ## Features
 
 - **White-label branding** — Company name, logo, primary color, tagline, hero copy, contact info, social links (env-driven)
-- **Property listings** — Search and filter by state, city, type, and price (India-focused defaults)
-- **Property detail pages** — Gallery, specs, share actions, contact CTAs
+- **Property listings** — Search, filter, sort, pagination (state, city, type, price, beds/baths)
+- **Property detail** — Gallery, embedded Google Maps, inquiry form, share actions
+- **Image upload** — Upload property photos to `/public/uploads` from admin/dashboard forms
+- **Inquiry / leads** — Contact form + property inquiries with admin management
+- **Email alerts** — Optional Resend integration for new inquiry notifications
 - **Role-based access** — Super Admin, Admin, and User roles
-- **Admin panel** — Manage all properties and users
+- **Admin panel** — Dashboard, properties, users, inquiries
 - **User dashboard** — Users manage their own listings
 - **SEO ready** — Sitemap, robots.txt, Open Graph metadata, dynamic favicon
 - **Legal pages** — Privacy, Terms, Contact
@@ -32,21 +35,27 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-### Development demo data
+### Demo data
 
-To seed sample properties and users on first run (development only):
+**Development** — add to `.env.local`:
 
 ```env
 SEED_DEMO_DATA=true
 ```
 
-Demo accounts (shown on login page in development only):
+Or run once:
+
+```bash
+npm run seed:demo
+```
+
+**Live preview (Vercel)** — set `SEED_DEMO_DATA=true`, deploy, visit the site once, then remove and redeploy.
 
 | Role        | Email                     | Password       |
 |-------------|---------------------------|----------------|
-| Super Admin | superadmin@estatehub.com  | superadmin123  |
-| Admin       | admin@estatehub.com       | admin123       |
-| User        | user@estatehub.com        | user123        |
+| Super Admin | superadmin@primenest.com  | superadmin123  |
+| Admin       | admin@primenest.com       | admin123       |
+| User        | user@primenest.com        | user123        |
 
 ## Environment variables
 
@@ -58,14 +67,12 @@ Copy `.env.example` to `.env.local` and configure:
 | `NEXTAUTH_SECRET` | Yes | Session secret (32+ chars in production) |
 | `NEXTAUTH_URL` | Yes | App URL (e.g. `http://localhost:3000`) |
 | `NEXT_PUBLIC_SITE_URL` | Yes (prod) | Public URL for SEO and share links |
-| `NEXT_PUBLIC_COMPANY_NAME` | No | Brand name |
-| `NEXT_PUBLIC_COMPANY_LOGO` | No | Logo path or URL |
-| `NEXT_PUBLIC_PRIMARY_COLOR` | No | Brand hex color |
-| `NEXT_PUBLIC_CONTACT_PHONE` | No | Contact phone |
-| `NEXT_PUBLIC_CONTACT_EMAIL` | No | Contact email |
-| `NEXT_PUBLIC_COMPANY_ADDRESS` | No | Office address |
+| `SEED_DEMO_DATA` | No | `true` to seed demo users/properties when DB is empty |
+| `NOTIFY_EMAIL` | No | Email address for inquiry notifications |
+| `RESEND_API_KEY` | No | Resend.com API key for email alerts |
+| `EMAIL_FROM` | No | Sender address for Resend (e.g. `Site <onboarding@resend.dev>`) |
 
-See `.env.example` for the full list including hero text and social links.
+See `.env.example` for branding and social link variables.
 
 ## Production build
 
@@ -74,17 +81,17 @@ npm run build
 npm start
 ```
 
-**Important:** Set a strong `NEXTAUTH_SECRET` and correct `NEXTAUTH_URL` / `NEXT_PUBLIC_SITE_URL` before deploying. Do not enable `SEED_DEMO_DATA` in production.
+Set a strong `NEXTAUTH_SECRET` and correct `NEXTAUTH_URL` / `NEXT_PUBLIC_SITE_URL` before deploying.
 
-## ThemeForest packaging
-
-To verify the build and create an upload-ready ZIP:
+## CodeCanyon packaging
 
 ```bash
 npm run package:themeforest
 ```
 
-Output: `dist/real-estate-app-main-v1.0.0.zip` (main file) and `dist/real-estate-app-documentation-v1.0.0.zip` (documentation)
+Output: `dist/real-estate-app-main-v1.2.0.zip` and documentation ZIP.
+
+Reviewer notes template: `CODECANYON_REVIEWER_NOTES.txt`
 
 Full buyer documentation: **[documentation/index.html](./documentation/index.html)**
 
@@ -99,25 +106,20 @@ src/
 │   └── api/               # REST + NextAuth routes
 ├── components/            # UI components
 └── lib/                   # Config, auth, database, utilities
-documentation/             # ThemeForest install guide (HTML)
+documentation/             # Buyer install guide (HTML)
+scripts/seed-demo.ts       # One-time demo bootstrap
 ```
 
 ## Deployment
 
 Works on **Vercel**, **Railway**, **Render**, **DigitalOcean**, or any Node.js host with MongoDB access. See `documentation/index.html` for step-by-step deployment notes.
 
-## Credits
-
-- [Next.js](https://nextjs.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [NextAuth.js](https://next-auth.js.org/)
-- [Inter](https://fonts.google.com/specimen/Inter) via `next/font/google`
-- Demo property images may use [Unsplash](https://unsplash.com) (replace with client-owned assets in production)
+Verify deployment: `GET /api/health` should return `"status":"ok"`.
 
 ## License
 
-See `LICENSE.txt` and ThemeForest license terms included with your purchase.
+See `LICENSE.txt` and CodeCanyon license terms included with your purchase.
 
 ## Support
 
-Refer to `documentation/index.html` for installation help. For item support, contact the author via your ThemeForest purchase page.
+Refer to `documentation/index.html` for installation help. Contact the author via your CodeCanyon purchase page.

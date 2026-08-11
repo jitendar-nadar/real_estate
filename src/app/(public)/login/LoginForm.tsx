@@ -114,9 +114,9 @@ export default function LoginForm({ companyName }: LoginFormProps) {
           <div className="mt-8 p-4 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs text-slate-600 dark:text-slate-400">
             <p className="font-medium mb-2">Development accounts:</p>
             <ul className="space-y-1">
-              <li>Super Admin: superadmin@estatehub.com / superadmin123</li>
-              <li>Admin: admin@estatehub.com / admin123</li>
-              <li>User: user@estatehub.com / user123</li>
+              <li>Super Admin: superadmin@primenest.com / superadmin123</li>
+              <li>Admin: admin@primenest.com / admin123</li>
+              <li>User: user@primenest.com / user123</li>
             </ul>
           </div>
         )}
