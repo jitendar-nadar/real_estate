@@ -7,9 +7,10 @@ import Link from "next/link";
 
 interface LoginFormProps {
   companyName: string;
+  showDemoAccounts?: boolean;
 }
 
-export default function LoginForm({ companyName }: LoginFormProps) {
+export default function LoginForm({ companyName, showDemoAccounts = false }: LoginFormProps) {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
   const authError = searchParams.get("error");
@@ -20,12 +21,14 @@ export default function LoginForm({ companyName }: LoginFormProps) {
 
   const errorFromQuery =
     authError === "Configuration"
-      ? "Server configuration issue. Please verify NEXTAUTH_SECRET, NEXTAUTH_URL, and database environment variables on deployment."
+      ? "Server configuration issue. Set NEXTAUTH_SECRET and NEXTAUTH_URL on Vercel, then redeploy."
       : authError === "AccessDenied"
         ? "Access denied. Please sign in with a valid account."
         : authError === "Verification"
-          ? "Session verification failed. Please try signing in again."
-          : "";
+          ? "Session verification failed. Clear cookies and try again."
+          : authError === "CredentialsSignin"
+            ? "Invalid email or password. If this is a new deploy, set SEED_DEMO_DATA=true and visit /api/health (POST) once."
+            : "";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -33,18 +36,27 @@ export default function LoginForm({ companyName }: LoginFormProps) {
     setLoading(true);
     try {
       const res = await signIn("credentials", {
-        email,
+        email: email.trim().toLowerCase(),
         password,
         redirect: false,
+        callbackUrl,
       });
       if (res?.error) {
-        setError("Invalid email or password");
+        setError(
+          res.error === "CredentialsSignin"
+            ? "Invalid email or password. Demo not seeded? POST /api/health with SEED_DEMO_DATA=true on Vercel."
+            : "Sign in failed. Check NEXTAUTH_URL matches your Vercel URL exactly."
+        );
         setLoading(false);
+        return;
+      }
+      if (res?.url) {
+        window.location.assign(res.url);
         return;
       }
       window.location.assign(callbackUrl);
     } catch {
-      setError("Something went wrong");
+      setError("Something went wrong. Check Vercel logs and /api/health.");
       setLoading(false);
     }
   }
@@ -110,9 +122,9 @@ export default function LoginForm({ companyName }: LoginFormProps) {
           </Link>
         </p>
 
-        {process.env.NODE_ENV === "development" && (
+        {(showDemoAccounts || process.env.NODE_ENV === "development") && (
           <div className="mt-8 p-4 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs text-slate-600 dark:text-slate-400">
-            <p className="font-medium mb-2">Development accounts:</p>
+            <p className="font-medium mb-2">Demo accounts:</p>
             <ul className="space-y-1">
               <li>Super Admin: superadmin@primenest.com / superadmin123</li>
               <li>Admin: admin@primenest.com / admin123</li>

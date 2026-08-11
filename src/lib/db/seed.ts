@@ -1,3 +1,4 @@
+import type { Collection } from "mongodb";
 import bcrypt from "bcryptjs";
 import { Property } from "@/lib/types";
 import { StoredUser } from "@/lib/auth-types";
@@ -165,23 +166,47 @@ const SEED_USERS_INPUT: { id: string; email: string; name: string; role: StoredU
   { id: "1", email: "superadmin@primenest.com", name: "Super Admin", role: "super_admin", password: "superadmin123" },
   { id: "2", email: "admin@primenest.com", name: "Admin", role: "admin", password: "admin123" },
   { id: "3", email: "user@primenest.com", name: "User", role: "user", password: "user123" },
+  // Legacy demo emails (kept in sync for older deployments)
+  { id: "1", email: "superadmin@estatehub.com", name: "Super Admin", role: "super_admin", password: "superadmin123" },
+  { id: "2", email: "admin@estatehub.com", name: "Admin", role: "admin", password: "admin123" },
+  { id: "3", email: "user@estatehub.com", name: "User", role: "user", password: "user123" },
 ];
+
+export function isDemoSeedEnabled(): boolean {
+  return (
+    process.env.NODE_ENV !== "production" || process.env.SEED_DEMO_DATA === "true"
+  );
+}
+
+/** Upsert demo users so passwords/roles stay correct on live preview. */
+async function syncDemoUsers(usersCol: Collection<StoredUser>): Promise<void> {
+  for (const u of SEED_USERS_INPUT) {
+    const passwordHash = await bcrypt.hash(u.password, 10);
+    await usersCol.updateOne(
+      { email: u.email.toLowerCase() },
+      {
+        $set: {
+          id: u.id,
+          email: u.email.toLowerCase(),
+          name: u.name,
+          role: u.role,
+          passwordHash,
+        },
+      },
+      { upsert: true }
+    );
+  }
+}
 
 export async function seedDbIfEmpty(): Promise<void> {
   if (!isMongoConfigured()) return;
-
-  const seedEnabled =
-    process.env.NODE_ENV !== "production" || process.env.SEED_DEMO_DATA === "true";
-  if (!seedEnabled) return;
+  if (!isDemoSeedEnabled()) return;
 
   const db = await getDb();
   const propertiesCol = db.collection<Property>(PROPERTIES_COLLECTION);
   const usersCol = db.collection<StoredUser>(USERS_COLLECTION);
 
-  const [propertiesCount, usersCount] = await Promise.all([
-    propertiesCol.countDocuments(),
-    usersCol.countDocuments(),
-  ]);
+  const propertiesCount = await propertiesCol.countDocuments();
 
   if (propertiesCount === 0) {
     await propertiesCol.insertMany(
@@ -189,16 +214,16 @@ export async function seedDbIfEmpty(): Promise<void> {
     );
   }
 
-  if (usersCount === 0) {
-    const hashedUsers: StoredUser[] = await Promise.all(
-      SEED_USERS_INPUT.map(async (u) => ({
-        id: u.id,
-        email: u.email,
-        name: u.name,
-        role: u.role,
-        passwordHash: await bcrypt.hash(u.password, 10),
-      }))
-    );
-    await usersCol.insertMany(hashedUsers);
+  // Always sync demo users when seeding is enabled (fixes live preview login)
+  await syncDemoUsers(usersCol);
+}
+
+export async function countDemoUsers(): Promise<number> {
+  if (!isMongoConfigured()) return 0;
+  try {
+    const db = await getDb();
+    return db.collection(USERS_COLLECTION).countDocuments();
+  } catch {
+    return 0;
   }
 }

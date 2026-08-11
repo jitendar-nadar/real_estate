@@ -16,12 +16,18 @@ export interface UserSafe {
 
 export async function getUserByEmail(email: string): Promise<StoredUser | null> {
   if (!isMongoConfigured()) return null;
-  const db = await getDb();
-  await seedDbIfEmpty();
-  const doc = await db.collection<StoredUser>(COLLECTION).findOne({
-    email: { $regex: new RegExp(`^${email.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i") },
-  });
-  return doc;
+  try {
+    const db = await getDb();
+    await seedDbIfEmpty();
+    const normalized = email.trim().toLowerCase();
+    const doc = await db.collection<StoredUser>(COLLECTION).findOne({
+      email: { $regex: new RegExp(`^${normalized.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "i") },
+    });
+    return doc;
+  } catch (err) {
+    console.error("getUserByEmail error:", err);
+    return null;
+  }
 }
 
 export async function getAllUsers(): Promise<UserSafe[]> {

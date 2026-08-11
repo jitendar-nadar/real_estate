@@ -14,6 +14,7 @@ export const metadata: Metadata = buildPageMetadata(
 
 export default function LoginPage() {
   const { companyName } = getSiteConfig();
+  const showDemoAccounts = process.env.NEXT_PUBLIC_SHOW_DEMO_LOGIN === "true";
 
   return (
     <Suspense
@@ -25,7 +26,7 @@ export default function LoginPage() {
         </div>
       }
     >
-      <LoginForm companyName={companyName} />
+      <LoginForm companyName={companyName} showDemoAccounts={showDemoAccounts} />
     </Suspense>
   );
 }
