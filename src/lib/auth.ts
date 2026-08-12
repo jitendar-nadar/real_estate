@@ -84,6 +84,13 @@ export async function getServerSessionSafe(): Promise<Session | null> {
   try {
     return await getServerSession(authOptions);
   } catch (err) {
+    const digest =
+      err && typeof err === "object" && "digest" in err
+        ? String((err as { digest?: string }).digest)
+        : "";
+    if (digest === "DYNAMIC_SERVER_USAGE") {
+      return null;
+    }
     console.error("getServerSession error:", err);
     return null;
   }
