@@ -1,10 +1,9 @@
 import type { MetadataRoute } from "next";
 import { getAllProperties } from "@/lib/data";
-import { getSiteConfig } from "@/lib/site-config";
+import { getSiteBaseUrl } from "@/lib/site-config";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const { siteUrl } = getSiteConfig();
-  const base = siteUrl ?? "http://localhost:3000";
+  const base = getSiteBaseUrl();
   const properties = await getAllProperties();
 
   const staticPages: MetadataRoute.Sitemap = [

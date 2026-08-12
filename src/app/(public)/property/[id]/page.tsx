@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { getPropertyById, getAllProperties } from "@/lib/data";
 import { formatPriceINR } from "@/lib/format";
 import { buildPageMetadata } from "@/lib/metadata";
-import { getSiteConfig } from "@/lib/site-config";
+import { getSiteConfig, getSiteBaseUrl } from "@/lib/site-config";
 import PropertyShareActions from "@/components/PropertyShareActions";
 import PropertyCard from "@/components/PropertyCard";
 import InquiryForm from "@/components/InquiryForm";
@@ -50,11 +50,11 @@ export default async function PropertyPage({
     .filter((p) => p.id !== property.id && (p.city === property.city || p.type === property.type))
     .slice(0, 3);
 
-  const { contactPhone, contactEmail, siteUrl } = getSiteConfig();
+  const { contactPhone, contactEmail } = getSiteConfig();
 
   const [primaryImage, ...restImages] = property.images;
 
-  const baseUrl = siteUrl ?? "http://localhost:3000";
+  const baseUrl = getSiteBaseUrl();
   const propertyUrl = `${baseUrl}/property/${property.id}`;
   const shareMessage = [
     `${property.title}`,

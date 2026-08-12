@@ -57,6 +57,27 @@ function readEnv(key: string): string | undefined {
   return process.env[key]?.trim() || undefined;
 }
 
+/** Absolute site URL for metadata, sitemap, and share links — never empty. */
+export function getSiteBaseUrl(): string {
+  const candidates = [
+    readEnv("NEXT_PUBLIC_SITE_URL"),
+    readEnv("NEXTAUTH_URL"),
+    readEnv("VERCEL_URL") ? `https://${readEnv("VERCEL_URL")}` : undefined,
+  ];
+
+  for (const candidate of candidates) {
+    if (!candidate) continue;
+    try {
+      const url = candidate.startsWith("http") ? candidate : `https://${candidate}`;
+      return new URL(url).origin;
+    } catch {
+      continue;
+    }
+  }
+
+  return "http://localhost:3000";
+}
+
 export function getSiteConfig(): SiteConfig {
   const socialLinks = parseSocialLinks(readEnv("NEXT_PUBLIC_SOCIAL_LINKS"));
 
@@ -83,7 +104,7 @@ export function getSiteConfig(): SiteConfig {
     heroSubheadline:
       readEnv("NEXT_PUBLIC_HERO_SUBHEADLINE") ?? DEFAULTS.heroSubheadline,
     primaryColor: readEnv("NEXT_PUBLIC_PRIMARY_COLOR") ?? DEFAULTS.primaryColor,
-    siteUrl: readEnv("NEXT_PUBLIC_SITE_URL") ?? DEFAULTS.siteUrl,
+    siteUrl: readEnv("NEXT_PUBLIC_SITE_URL") ?? null,
     contactPhone: readEnv("NEXT_PUBLIC_CONTACT_PHONE") ?? DEFAULTS.contactPhone,
     contactEmail: readEnv("NEXT_PUBLIC_CONTACT_EMAIL") ?? DEFAULTS.contactEmail,
     address: readEnv("NEXT_PUBLIC_COMPANY_ADDRESS") ?? DEFAULTS.address,

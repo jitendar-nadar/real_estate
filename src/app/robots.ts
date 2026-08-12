@@ -1,9 +1,8 @@
 import type { MetadataRoute } from "next";
-import { getSiteConfig } from "@/lib/site-config";
+import { getSiteBaseUrl } from "@/lib/site-config";
 
 export default function robots(): MetadataRoute.Robots {
-  const { siteUrl } = getSiteConfig();
-  const base = siteUrl ?? "http://localhost:3000";
+  const base = getSiteBaseUrl();
 
   return {
     rules: { userAgent: "*", allow: "/" },

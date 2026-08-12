@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import type { SiteConfig } from "./site-config";
+import { getSiteBaseUrl } from "./site-config";
 
 export function buildRootMetadata(config: SiteConfig): Metadata {
-  const siteUrl = config.siteUrl;
+  const metadataBase = new URL(getSiteBaseUrl());
 
   return {
-    metadataBase: siteUrl ? new URL(siteUrl) : undefined,
+    metadataBase,
     title: {
       default: `${config.companyName} – Premium Real Estate`,
       template: `%s | ${config.companyName}`,
