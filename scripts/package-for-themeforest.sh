@@ -22,6 +22,7 @@ rm -rf .next
 export NEXTAUTH_SECRET="build-time-placeholder-secret-minimum-32-chars"
 export NEXTAUTH_URL="http://localhost:3000"
 export NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+export VERCEL_URL="localhost:3000"
 npm run build
 echo "    Build OK"
 echo ""

@@ -30,8 +30,8 @@ export async function generateMetadata({
       property.title,
       `${formatPriceINR(property.price)} · ${property.city}, ${property.state}`
     ),
-    openGraph: property.images[0]
-      ? { images: [{ url: property.images[0] }] }
+    openGraph: property.images[0]?.trim()
+      ? { images: [{ url: property.images[0].trim() }] }
       : undefined,
   };
 }

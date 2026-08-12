@@ -1,9 +1,13 @@
 import type { Metadata, Viewport } from "next";
+import dynamic from "next/dynamic";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import SessionProvider from "@/components/SessionProvider";
 import { buildRootMetadata } from "@/lib/metadata";
 import { getPrimaryColorStyle, getSiteConfig } from "@/lib/site-config";
+
+const SessionProvider = dynamic(() => import("@/components/SessionProvider"), {
+  ssr: false,
+});
 
 const inter = Inter({
   subsets: ["latin"],
@@ -11,15 +15,15 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const siteConfig = getSiteConfig();
-
-export const metadata: Metadata = buildRootMetadata(siteConfig);
+export function generateMetadata(): Metadata {
+  return buildRootMetadata(getSiteConfig());
+}
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: siteConfig.primaryColor,
+  themeColor: getSiteConfig().primaryColor,
 };
 
 export default function RootLayout({
@@ -27,6 +31,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const siteConfig = getSiteConfig();
   const primaryColorStyle = getPrimaryColorStyle(siteConfig.primaryColor);
 
   return (

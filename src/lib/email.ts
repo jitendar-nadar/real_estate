@@ -42,7 +42,7 @@ export async function sendInquiryNotification({
     <p><strong>Message:</strong></p>
     <p>${escapeHtml(inquiry.message).replace(/\n/g, "<br>")}</p>
     <hr>
-    <p style="color:#666;font-size:12px">View in admin: ${escapeHtml(process.env.NEXT_PUBLIC_SITE_URL ?? "")}/admin/inquiries</p>
+    <p style="color:#666;font-size:12px">View in admin: ${escapeHtml(process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3000")}/admin/inquiries</p>
   `.trim();
 
   try {

@@ -38,6 +38,8 @@ const DEFAULTS: SiteConfig = {
   socialLinks: {},
 };
 
+const FALLBACK_SITE_URL = "http://localhost:3000";
+
 function parseSocialLinks(raw: string | undefined): SocialLinks {
   if (!raw?.trim()) return {};
 
@@ -54,10 +56,24 @@ function parseSocialLinks(raw: string | undefined): SocialLinks {
 }
 
 function readEnv(key: string): string | undefined {
-  return process.env[key]?.trim() || undefined;
+  const value = process.env[key]?.trim();
+  return value || undefined;
 }
 
-/** Absolute site URL for metadata, sitemap, and share links — never empty. */
+function parseAbsoluteOrigin(value: string | undefined): string | null {
+  if (!value?.trim()) return null;
+  try {
+    const raw = value.trim();
+    const normalized = raw.startsWith("http") ? raw : `https://${raw}`;
+    const parsed = new URL(normalized);
+    if (!parsed.hostname) return null;
+    return parsed.origin;
+  } catch {
+    return null;
+  }
+}
+
+/** Absolute site URL for metadata, sitemap, and share links — never empty or invalid. */
 export function getSiteBaseUrl(): string {
   const candidates = [
     readEnv("NEXT_PUBLIC_SITE_URL"),
@@ -66,16 +82,11 @@ export function getSiteBaseUrl(): string {
   ];
 
   for (const candidate of candidates) {
-    if (!candidate) continue;
-    try {
-      const url = candidate.startsWith("http") ? candidate : `https://${candidate}`;
-      return new URL(url).origin;
-    } catch {
-      continue;
-    }
+    const origin = parseAbsoluteOrigin(candidate);
+    if (origin) return origin;
   }
 
-  return "http://localhost:3000";
+  return FALLBACK_SITE_URL;
 }
 
 export function getSiteConfig(): SiteConfig {
@@ -95,9 +106,11 @@ export function getSiteConfig(): SiteConfig {
     if (value) socialLinks[key] = value;
   }
 
+  const logo = readEnv("NEXT_PUBLIC_COMPANY_LOGO");
+
   return {
     companyName: readEnv("NEXT_PUBLIC_COMPANY_NAME") ?? DEFAULTS.companyName,
-    companyLogo: readEnv("NEXT_PUBLIC_COMPANY_LOGO") ?? DEFAULTS.companyLogo,
+    companyLogo: logo ?? null,
     tagline: readEnv("NEXT_PUBLIC_COMPANY_TAGLINE") ?? DEFAULTS.tagline,
     heroHeadline:
       readEnv("NEXT_PUBLIC_HERO_HEADLINE") ?? DEFAULTS.heroHeadline,

@@ -1,5 +1,15 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+import { buildPageMetadata } from "@/lib/metadata";
 import { getSiteConfig } from "@/lib/site-config";
+
+const config = getSiteConfig();
+
+export const metadata: Metadata = buildPageMetadata(
+  config,
+  "Page not found",
+  "The page you requested could not be found."
+);
 
 export default function NotFound() {
   const { companyName } = getSiteConfig();

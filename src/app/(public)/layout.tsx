@@ -1,15 +1,12 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CompanyLogo from "@/components/CompanyLogo";
-import { getServerSessionSafe } from "@/lib/auth";
 
-export default async function PublicLayout({
+export default function PublicLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSessionSafe();
-
   return (
     <>
       <a
@@ -18,7 +15,7 @@ export default async function PublicLayout({
       >
         Skip to content
       </a>
-      <Header logo={<CompanyLogo />} initialSession={session} />
+      <Header logo={<CompanyLogo />} />
       <main id="main-content" className="flex-1">
         {children}
       </main>
