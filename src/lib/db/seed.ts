@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { Property } from "@/lib/types";
 import { StoredUser } from "@/lib/auth-types";
 import { getDb, isMongoConfigured } from "@/lib/mongodb";
+import { isTruthyEnv } from "@/lib/env-flags";
 
 const PROPERTIES_COLLECTION = "properties";
 const USERS_COLLECTION = "users";
@@ -173,9 +174,7 @@ const SEED_USERS_INPUT: { id: string; email: string; name: string; role: StoredU
 ];
 
 export function isDemoSeedEnabled(): boolean {
-  return (
-    process.env.NODE_ENV !== "production" || process.env.SEED_DEMO_DATA === "true"
-  );
+  return process.env.NODE_ENV !== "production" || isTruthyEnv(process.env.SEED_DEMO_DATA);
 }
 
 /** Upsert demo users so passwords/roles stay correct on live preview. */
@@ -199,8 +198,14 @@ async function syncDemoUsers(usersCol: Collection<StoredUser>): Promise<void> {
 }
 
 export async function seedDbIfEmpty(): Promise<void> {
-  if (!isMongoConfigured()) return;
-  if (!isDemoSeedEnabled()) return;
+  if (!isMongoConfigured()) {
+    console.warn("[seed] Skipped — MONGODB_URI not configured");
+    return;
+  }
+  if (!isDemoSeedEnabled()) {
+    console.warn("[seed] Skipped — SEED_DEMO_DATA is not enabled in production");
+    return;
+  }
 
   const db = await getDb();
   const propertiesCol = db.collection<Property>(PROPERTIES_COLLECTION);
@@ -212,10 +217,42 @@ export async function seedDbIfEmpty(): Promise<void> {
     await propertiesCol.insertMany(
       SEED_PROPERTIES.map((p) => ({ ...p, createdBy: "2" }))
     );
+    console.log("[seed] Inserted demo properties");
   }
 
-  // Always sync demo users when seeding is enabled (fixes live preview login)
   await syncDemoUsers(usersCol);
+  console.log("[seed] Demo users synced");
+}
+
+/** Bootstrap demo data — throws with a clear message on failure. */
+export async function bootstrapDemoData(): Promise<{
+  userCount: number;
+  propertiesCount: number;
+}> {
+  if (!isMongoConfigured()) {
+    throw new Error("MONGODB_URI is not configured on the server");
+  }
+  if (!isDemoSeedEnabled()) {
+    throw new Error(
+      "SEED_DEMO_DATA is not enabled. Set SEED_DEMO_DATA=true in Vercel → Environment Variables → Production, then redeploy."
+    );
+  }
+
+  await seedDbIfEmpty();
+
+  const db = await getDb();
+  const [userCount, propertiesCount] = await Promise.all([
+    db.collection(USERS_COLLECTION).countDocuments(),
+    db.collection(PROPERTIES_COLLECTION).countDocuments(),
+  ]);
+
+  if (userCount === 0) {
+    throw new Error(
+      "Demo users were not created. Check MongoDB Atlas network access (allow 0.0.0.0/0) and MONGODB_URI."
+    );
+  }
+
+  return { userCount, propertiesCount };
 }
 
 export async function countDemoUsers(): Promise<number> {

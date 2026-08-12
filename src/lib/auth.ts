@@ -4,6 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { getAuthSecretSafe } from "./auth-secret";
 import { verifyCredentials } from "./users";
 import { canAccessAdmin, type Role } from "./auth-types";
+import { isDemoSeedEnabled, seedDbIfEmpty } from "./db/seed";
 
 declare module "next-auth" {
   interface User {
@@ -38,6 +39,9 @@ export const authOptions: NextAuthOptions = {
         if (!credentials?.email || !credentials?.password) return null;
         const email = credentials.email.trim().toLowerCase();
         try {
+          if (isDemoSeedEnabled()) {
+            await seedDbIfEmpty();
+          }
           const user = await verifyCredentials(email, credentials.password);
           if (!user) return null;
           return {
