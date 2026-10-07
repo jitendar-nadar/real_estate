@@ -6,13 +6,15 @@ A production-ready, white-label real estate listing platform built with **Next.j
 
 - **White-label branding** — Company name, logo, primary color, tagline, hero copy, contact info, social links (env-driven)
 - **Property listings** — Search, filter, sort, pagination (state, city, type, price, beds/baths)
-- **Property detail** — Gallery, embedded Google Maps, inquiry form, share actions
+- **Property detail** — Gallery, embedded Google Maps, assigned agent, inquiry form, share actions
+- **Agents** — Public agent directory and profiles; admin CRUD; assign agents to listings
+- **Favorites** — Save listings (signed-in users sync to MongoDB; guests use localStorage)
 - **Image upload** — Upload property photos to `/public/uploads` from admin/dashboard forms
 - **Inquiry / leads** — Contact form + property inquiries with admin management
 - **Email alerts** — Optional Resend integration for new inquiry notifications
 - **Role-based access** — Super Admin, Admin, and User roles
-- **Admin panel** — Dashboard, properties, users, inquiries
-- **User dashboard** — Users manage their own listings
+- **Admin panel** — Dashboard, properties, agents, users, inquiries
+- **User dashboard** — Users manage their own listings and saved favorites
 - **SEO ready** — Sitemap, robots.txt, Open Graph metadata, dynamic favicon
 - **Legal pages** — Privacy, Terms, Contact
 - **Responsive** — Mobile-first public site and admin/dashboard shells

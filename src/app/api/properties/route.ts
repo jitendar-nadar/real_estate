@@ -24,6 +24,12 @@ function validateBody(body: unknown): { ok: true; data: Omit<Property, "id" | "l
   const state = typeof b.state === "string" ? b.state.trim() : "";
   const zip = typeof b.zip === "string" ? b.zip.trim() : "";
   const featured = Boolean(b.featured);
+  let agentId: string | null = null;
+  if (b.agentId === null || b.agentId === "") {
+    agentId = null;
+  } else if (typeof b.agentId === "string" && b.agentId.trim()) {
+    agentId = b.agentId.trim();
+  }
   let images: string[] = [];
   if (Array.isArray(b.images)) {
     images = b.images.filter((u): u is string => typeof u === "string").slice(0, 10);
@@ -55,6 +61,7 @@ function validateBody(body: unknown): { ok: true; data: Omit<Property, "id" | "l
       zip,
       images: images.length ? images : [DEFAULT_PROPERTY_IMAGE],
       featured,
+      agentId,
     },
   };
 }

@@ -83,6 +83,17 @@ export async function getFeaturedProperties(): Promise<Property[]> {
   });
 }
 
+export async function getPropertiesByAgentId(agentId: string): Promise<Property[]> {
+  return withDb([], async (db) => {
+    await seedDbIfEmpty();
+    const list = await db
+      .collection<Property>(COLLECTION)
+      .find({ $and: [{ agentId }, notDeleted] })
+      .toArray();
+    return list.map(toProperty);
+  });
+}
+
 export async function createProperty(
   data: Omit<Property, "id" | "listingDate" | "deletedAt"> & { createdBy?: string | null }
 ): Promise<Property> {

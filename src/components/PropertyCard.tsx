@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Property } from "@/lib/types";
 import { formatPriceINR } from "@/lib/format";
+import FavoriteButton from "@/components/FavoriteButton";
 
 export default function PropertyCard({ property }: { property: Property }) {
   const [firstImage] = property.images;
@@ -25,7 +26,10 @@ export default function PropertyCard({ property }: { property: Property }) {
             Featured
           </span>
         )}
-        <span className="absolute top-3 right-3 px-2 py-1 text-xs font-medium bg-white/90 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 rounded-md capitalize">
+        <div className="absolute top-3 right-3 z-10">
+          <FavoriteButton propertyId={property.id} />
+        </div>
+        <span className="absolute bottom-3 right-3 px-2 py-1 text-xs font-medium bg-white/90 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 rounded-md capitalize">
           {property.type}
         </span>
       </div>

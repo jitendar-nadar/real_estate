@@ -20,6 +20,19 @@ export interface Property {
   deletedAt?: string | null;
   /** User id who created the listing (for ownership) */
   createdBy?: string | null;
+  /** Assigned listing agent */
+  agentId?: string | null;
+}
+
+export interface Agent {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string | null;
+  title?: string | null;
+  bio?: string | null;
+  photo?: string | null;
+  active?: boolean;
 }
 
 export interface SearchFilters {

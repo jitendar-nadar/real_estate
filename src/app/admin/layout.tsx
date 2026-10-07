@@ -8,6 +8,7 @@ import { getSiteConfig } from "@/lib/site-config";
 const nav = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/properties", label: "Properties" },
+  { href: "/admin/agents", label: "Agents" },
   { href: "/admin/inquiries", label: "Inquiries" },
   { href: "/admin/users", label: "Users" },
 ];

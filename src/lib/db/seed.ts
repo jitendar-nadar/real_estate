@@ -1,12 +1,48 @@
 import type { Collection } from "mongodb";
 import bcrypt from "bcryptjs";
-import { Property } from "@/lib/types";
+import { Agent, Property } from "@/lib/types";
 import { StoredUser } from "@/lib/auth-types";
 import { getDb, isMongoConfigured } from "@/lib/mongodb";
 import { isTruthyEnv } from "@/lib/env-flags";
 
 const PROPERTIES_COLLECTION = "properties";
 const USERS_COLLECTION = "users";
+const AGENTS_COLLECTION = "agents";
+
+export const SEED_AGENTS: Agent[] = [
+  {
+    id: "agent-1",
+    name: "Priya Sharma",
+    email: "priya.sharma@primenest.com",
+    phone: "+91 98765 43210",
+    title: "Senior Sales Agent",
+    bio: "Specialist in Bengaluru and Hyderabad apartments with 8+ years in residential sales.",
+    photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop",
+    active: true,
+  },
+  {
+    id: "agent-2",
+    name: "Rahul Mehta",
+    email: "rahul.mehta@primenest.com",
+    phone: "+91 91234 56789",
+    title: "Luxury Property Consultant",
+    bio: "Focused on premium villas and sea-facing homes in Mumbai and Gurgaon.",
+    photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop",
+    active: true,
+  },
+];
+
+/** Demo property id → agent id */
+const DEMO_PROPERTY_AGENTS: Record<string, string> = {
+  "1": "agent-1",
+  "2": "agent-2",
+  "3": "agent-2",
+  "4": "agent-1",
+  "5": "agent-1",
+  "6": "agent-2",
+  "7": "agent-1",
+  "8": "agent-2",
+};
 
 export const SEED_PROPERTIES: Property[] = [
   {
@@ -178,6 +214,18 @@ export function isDemoSeedEnabled(): boolean {
 }
 
 /** Upsert demo users so passwords/roles stay correct on live preview. */
+async function syncDemoAgents(agentsCol: Collection<Agent>): Promise<void> {
+  for (const agent of SEED_AGENTS) {
+    await agentsCol.updateOne({ id: agent.id }, { $set: agent }, { upsert: true });
+  }
+}
+
+async function syncDemoPropertyAgents(propertiesCol: Collection<Property>): Promise<void> {
+  for (const [propertyId, agentId] of Object.entries(DEMO_PROPERTY_AGENTS)) {
+    await propertiesCol.updateOne({ id: propertyId }, { $set: { agentId } });
+  }
+}
+
 async function syncDemoUsers(usersCol: Collection<StoredUser>): Promise<void> {
   for (const u of SEED_USERS_INPUT) {
     const passwordHash = await bcrypt.hash(u.password, 10);
@@ -210,15 +258,24 @@ export async function seedDbIfEmpty(): Promise<void> {
   const db = await getDb();
   const propertiesCol = db.collection<Property>(PROPERTIES_COLLECTION);
   const usersCol = db.collection<StoredUser>(USERS_COLLECTION);
+  const agentsCol = db.collection<Agent>(AGENTS_COLLECTION);
 
   const propertiesCount = await propertiesCol.countDocuments();
 
   if (propertiesCount === 0) {
     await propertiesCol.insertMany(
-      SEED_PROPERTIES.map((p) => ({ ...p, createdBy: "2" }))
+      SEED_PROPERTIES.map((p) => ({
+        ...p,
+        createdBy: "2",
+        agentId: DEMO_PROPERTY_AGENTS[p.id] ?? null,
+      }))
     );
     console.log("[seed] Inserted demo properties");
   }
+
+  await syncDemoAgents(agentsCol);
+  await syncDemoPropertyAgents(propertiesCol);
+  console.log("[seed] Demo agents synced");
 
   await syncDemoUsers(usersCol);
   console.log("[seed] Demo users synced");

@@ -6,6 +6,7 @@ import { getSiteConfig } from "@/lib/site-config";
 
 const nav = [
   { href: "/dashboard", label: "My listings" },
+  { href: "/dashboard/favorites", label: "Favorites" },
   { href: "/dashboard/properties/new", label: "Add property" },
 ];
 

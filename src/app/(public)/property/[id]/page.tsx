@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getPropertyById, getAllProperties } from "@/lib/data";
+import { getPropertyById, getAllProperties, getAgentById } from "@/lib/data";
 import { formatPriceINR } from "@/lib/format";
 import { buildPageMetadata } from "@/lib/metadata";
 import { getSiteConfig, getSiteBaseUrl } from "@/lib/site-config";
@@ -10,6 +10,7 @@ import PropertyShareActions from "@/components/PropertyShareActions";
 import PropertyCard from "@/components/PropertyCard";
 import InquiryForm from "@/components/InquiryForm";
 import PropertyMapEmbed from "@/components/PropertyMapEmbed";
+import FavoriteButton from "@/components/FavoriteButton";
 
 export async function generateMetadata({
   params,
@@ -51,6 +52,9 @@ export default async function PropertyPage({
     .slice(0, 3);
 
   const { contactPhone, contactEmail } = getSiteConfig();
+  const assignedAgent = property.agentId ? await getAgentById(property.agentId) : undefined;
+  const agentPhone = assignedAgent?.phone?.trim() || contactPhone;
+  const agentEmail = assignedAgent?.email?.trim() || contactEmail;
 
   const [primaryImage, ...restImages] = property.images;
 
@@ -119,9 +123,12 @@ export default async function PropertyPage({
         {/* Details */}
         <div>
           <div className="sticky top-24">
-            <span className="inline-block px-2 py-1 text-sm font-medium bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-md capitalize mb-2">
-              {property.type}
-            </span>
+            <div className="flex items-start justify-between gap-3 mb-2">
+              <span className="inline-block px-2 py-1 text-sm font-medium bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-md capitalize">
+                {property.type}
+              </span>
+              <FavoriteButton propertyId={property.id} />
+            </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
               {property.title}
             </h1>
@@ -163,19 +170,35 @@ export default async function PropertyPage({
 
             <div className="mt-8 space-y-6">
               <div>
+                {assignedAgent && assignedAgent.active !== false && (
+                  <div className="mb-4 rounded-xl border border-slate-200 dark:border-slate-700 p-4 bg-white dark:bg-slate-800/50">
+                    <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400 mb-1">
+                      Listing agent
+                    </p>
+                    <Link
+                      href={`/agents/${assignedAgent.id}`}
+                      className="font-semibold text-slate-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400"
+                    >
+                      {assignedAgent.name}
+                    </Link>
+                    {assignedAgent.title && (
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{assignedAgent.title}</p>
+                    )}
+                  </div>
+                )}
                 <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-3">Contact agent</p>
                 <div className="flex flex-col sm:flex-row gap-3 mb-6">
-                  {contactPhone && (
+                  {agentPhone && (
                     <a
-                      href={`tel:${contactPhone.replace(/\s/g, "")}`}
+                      href={`tel:${agentPhone.replace(/\s/g, "")}`}
                       className="touch-target inline-flex items-center justify-center gap-2 rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-medium px-5 py-3 shadow-sm transition"
                     >
                       Call agent
                     </a>
                   )}
-                  {contactEmail && (
+                  {agentEmail && (
                     <a
-                      href={`mailto:${contactEmail}`}
+                      href={`mailto:${agentEmail}`}
                       className="touch-target inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium px-5 py-3 shadow-sm transition hover:bg-slate-50 dark:hover:bg-slate-700"
                     >
                       Email agent

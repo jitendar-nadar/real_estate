@@ -8,7 +8,7 @@ import {
 
 export const dynamic = "force-dynamic";
 
-const APP_VERSION = "1.2.0";
+const APP_VERSION = "1.3.0";
 
 export async function GET() {
   const mongoConfigured = isMongoConfigured();

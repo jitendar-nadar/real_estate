@@ -53,6 +53,13 @@ function validatePatchBody(
     data.zip = v;
   }
   if (b.featured !== undefined) data.featured = Boolean(b.featured);
+  if (b.agentId !== undefined) {
+    if (b.agentId === null || b.agentId === "") {
+      data.agentId = null;
+    } else if (typeof b.agentId === "string") {
+      data.agentId = b.agentId.trim() || null;
+    }
+  }
   if (b.images !== undefined) {
     if (Array.isArray(b.images)) {
       data.images = b.images.filter((u): u is string => typeof u === "string").slice(0, 10);

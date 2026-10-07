@@ -5,12 +5,13 @@ Replace [YOUR_DEMO_URL] with your live Vercel URL before submitting.
 
 LIVE PREVIEW
 ------------
-URL:          [YOUR_DEMO_URL]
-Health check: [YOUR_DEMO_URL]/api/health
-Login:        [YOUR_DEMO_URL]/login
+URL:           [YOUR_DEMO_URL]
+Health check:  [YOUR_DEMO_URL]/api/health
+Login:         [YOUR_DEMO_URL]/login
+Demo bootstrap: [YOUR_DEMO_URL]/api/setup/demo  (already run — demo is live)
 
-DEMO CREDENTIALS (pre-seeded on live preview)
----------------------------------------------
+DEMO CREDENTIALS
+----------------
 Super Admin: superadmin@primenest.com / superadmin123
 Admin:       admin@primenest.com / admin123
 User:        user@primenest.com / user123
@@ -26,21 +27,24 @@ Next.js 14 · TypeScript · Tailwind CSS · MongoDB · NextAuth.js
 
 REVIEWER TEST FLOW (~5 minutes)
 -------------------------------
-1. Browse homepage and /listings — 8 sample properties
-2. Open a property → view embedded map → submit inquiry form
-3. Login as Admin → /admin/inquiries — verify lead appears
-4. Admin → Properties → Add property → upload images → save
-5. /admin — dashboard stats
+1. Browse homepage and /listings — sample properties with search & filters
+2. Open a property → embedded Google Map → submit inquiry form
+3. Login as Admin → /admin/inquiries — verify the lead appears
+4. Admin → Agents → view demo agents; open a public profile at /agents
+5. Admin → Properties → Add property → assign agent → upload images → save
+6. Property detail → heart icon (favorite); login → /dashboard/favorites
+7. /admin — dashboard stats
 
 SETUP FOR BUYERS (~10 minutes)
 ------------------------------
 See install.txt and documentation/index.html inside the package.
-
 Requires: Node 18+, MongoDB 6+ (Atlas free tier works).
 
-KEY FEATURES (v1.2.0)
+KEY FEATURES (v1.3.0)
 ---------------------
 - Public listings site with search, filters, pagination
+- Agent profiles (/agents) and admin agent management
+- Save favorites (account + guest localStorage)
 - Embedded Google Maps on property detail
 - Property image upload (local /public/uploads)
 - Inquiry/leads management in admin
@@ -48,13 +52,14 @@ KEY FEATURES (v1.2.0)
 - Role-based admin + user dashboard
 - White-label branding via environment variables
 - REST API with JWT bearer tokens
+- One-click demo bootstrap: /api/setup/demo
 - SEO: sitemap, robots, Open Graph
 
-LIVE PREVIEW SETUP (author notes)
+LIVE PREVIEW (author setup notes)
 ---------------------------------
-Vercel env vars required:
-  MONGODB_URI, NEXTAUTH_SECRET, NEXTAUTH_URL, NEXT_PUBLIC_SITE_URL
-One-time: SEED_DEMO_DATA=true → deploy → visit site → remove and redeploy
+Vercel env: MONGODB_URI, NEXTAUTH_SECRET, NEXTAUTH_URL, NEXT_PUBLIC_SITE_URL
+Bootstrap: SEED_DEMO_DATA=true → deploy → open /api/setup/demo → remove SEED_DEMO_DATA
 
-Optional email on inquiry:
-  NOTIFY_EMAIL, EMAIL_FROM, RESEND_API_KEY
+Optional inquiry email: NOTIFY_EMAIL, EMAIL_FROM, RESEND_API_KEY
+
+PRICING SUGGESTION: $29 (Regular License)

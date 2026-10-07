@@ -1,6 +1,8 @@
-import { Property } from "./types";
+import { Agent, Property } from "./types";
 import * as db from "./db/properties";
 import * as inquiriesDb from "./db/inquiries";
+import * as agentsDb from "./db/agents";
+import * as favoritesDb from "./db/favorites";
 
 export async function getAllProperties(): Promise<Property[]> {
   return db.getAllProperties();
@@ -37,4 +39,21 @@ export async function getMyProperties(userId: string): Promise<Property[]> {
 
 export async function getFeaturedProperties(): Promise<Property[]> {
   return db.getFeaturedProperties();
+}
+
+export async function getAllAgents(activeOnly = false): Promise<Agent[]> {
+  return agentsDb.getAllAgents(activeOnly);
+}
+
+export async function getAgentById(id: string): Promise<Agent | undefined> {
+  const agent = await agentsDb.getAgentById(id);
+  return agent ?? undefined;
+}
+
+export async function getPropertiesByAgentId(agentId: string): Promise<Property[]> {
+  return db.getPropertiesByAgentId(agentId);
+}
+
+export async function getFavoritePropertyIds(userId: string): Promise<string[]> {
+  return favoritesDb.getFavoritePropertyIds(userId);
 }

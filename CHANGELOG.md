@@ -2,6 +2,26 @@
 
 All notable changes to this project are documented here.
 
+## [1.3.0] – 2026-10-07
+
+### Added
+- Agent management (admin CRUD, public `/agents` directory and profiles)
+- Assign listing agent on property create/edit
+- Favorites: save listings (logged-in users + guest localStorage), `/dashboard/favorites`
+- Demo seed sync for two sample agents and property assignments
+
+## [1.2.1] – 2026-08-12
+
+### Added
+- `/api/setup/demo` one-click demo bootstrap for live preview
+- Auto-seed on login when `SEED_DEMO_DATA=true`
+- Login page “Setup demo accounts” button
+
+### Fixed
+- Vercel prerender errors (metadata URLs, session SSR)
+- Demo user sync on production deployments
+- CodeCanyon reviewer notes and install docs updated
+
 ## [1.2.0] – 2026-08-11
 
 ### Added

@@ -37,8 +37,10 @@ Development (automatic on first request when DB is empty):
 
 Production / live preview (one-time bootstrap):
   1. Set SEED_DEMO_DATA=true in Vercel/host env vars
-  2. Deploy and visit the site once (seeds users + 8 sample properties)
+  2. Deploy, then open: https://your-site.com/api/setup/demo
   3. Remove SEED_DEMO_DATA and redeploy after demo is populated
+
+Or run locally: npm run seed:demo
 
 Demo login (after seed):
   Super Admin: superadmin@primenest.com / superadmin123

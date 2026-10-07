@@ -21,6 +21,7 @@ export default function Header({ logo, initialSession }: HeaderProps) {
     { href: "/", label: "Home" },
     { href: "/listings", label: "Listings" },
     { href: "/listings?featured=1", label: "Featured" },
+    { href: "/agents", label: "Agents" },
   ];
 
   const showAdmin = session?.user?.role && canAccessAdmin(session.user.role);
@@ -47,9 +48,14 @@ export default function Header({ logo, initialSession }: HeaderProps) {
               </Link>
             ))}
             {session && (
-              <Link href="/dashboard" className={desktopLinkClass}>
-                My listings
-              </Link>
+              <>
+                <Link href="/dashboard" className={desktopLinkClass}>
+                  My listings
+                </Link>
+                <Link href="/dashboard/favorites" className={desktopLinkClass}>
+                  Favorites
+                </Link>
+              </>
             )}
             {showAdmin && (
               <Link href="/admin" className={desktopLinkClass}>
@@ -102,11 +108,18 @@ export default function Header({ logo, initialSession }: HeaderProps) {
                 </li>
               ))}
               {session && (
-                <li>
-                  <Link href="/dashboard" onClick={closeMenu} className={mobileLinkClass}>
-                    My listings
-                  </Link>
-                </li>
+                <>
+                  <li>
+                    <Link href="/dashboard" onClick={closeMenu} className={mobileLinkClass}>
+                      My listings
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/dashboard/favorites" onClick={closeMenu} className={mobileLinkClass}>
+                      Favorites
+                    </Link>
+                  </li>
+                </>
               )}
               {showAdmin && (
                 <li>

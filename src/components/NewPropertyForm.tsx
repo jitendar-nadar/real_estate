@@ -6,6 +6,7 @@ import Link from "next/link";
 import { PropertyType } from "@/lib/types";
 import { indianStates, getCitiesByState } from "@/lib/locations";
 import ImageUploadField from "@/components/ImageUploadField";
+import AgentSelectField from "@/components/AgentSelectField";
 
 const PROPERTY_TYPES: { value: PropertyType; label: string }[] = [
   { value: "house", label: "House" },
@@ -47,6 +48,7 @@ export default function NewPropertyForm({
     zip: "",
     featured: false,
     images: "",
+    agentId: "",
   });
 
   const cities = useMemo(() => (state ? getCitiesByState(state) : []), [state]);
@@ -115,6 +117,7 @@ export default function NewPropertyForm({
           zip: form.zip.trim(),
           featured: form.featured,
           images: images.length ? images : undefined,
+          agentId: form.agentId || null,
         }),
       });
 
@@ -321,6 +324,11 @@ export default function NewPropertyForm({
         <ImageUploadField
           value={form.images}
           onChange={(images) => setForm((f) => ({ ...f, images }))}
+        />
+
+        <AgentSelectField
+          value={form.agentId}
+          onChange={(agentId) => setForm((f) => ({ ...f, agentId }))}
         />
 
         {showFeatured && (
